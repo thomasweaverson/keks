@@ -1,8 +1,8 @@
-import type { User } from "./user";
+import type { TUser } from "./user";
 
-export type Category = "cheesecake" | "bisque" | "shortbread" | "dessert";
+export type TCategory = "cheesecake" | "bisque" | "shortbread" | "dessert";
 
-export type Type =
+export type TType =
   | "lemon"
   | "chocolate"
   | "vanilla"
@@ -15,16 +15,16 @@ export type Type =
   | "chocolate-muffin"
   | "brand-muffin";
 
-export type CategoryWithTypes = {
-  category: Category;
-  types: Type[];
+export type TCategoryWithTypes = {
+  category: TCategory;
+  types: TType[];
 };
 
-export type Product = {
+export type TProduct = {
   id: string;
   title: string;
-  category: Category;
-  type: Type;
+  category: TCategory;
+  type: TType;
   price: number;
   previewImage: string;
   previewImageWebp: string;
@@ -32,7 +32,7 @@ export type Product = {
   isNew: boolean;
 };
 
-export type ProductExtended = Product & {
+export type TProductExtended = TProduct & {
   description: string;
   images: string[];
   weight: number;
@@ -40,18 +40,18 @@ export type ProductExtended = Product & {
   reviewCount: number;
 };
 
-export type Review = {
-  id: Product['id'];
+export type TReview = {
+  id: TProduct['id'];
   isoDate: string;
-  user: User;
+  user: TUser;
   positive: string;
   negative: string;
   rating: number;
 }
 
-export type ReviewPosting = {
-  id: Product['id'];
-  positive: Review['positive'];
-  negative: Review['negative'];
+export type TReviewPosting = {
+  id: TProduct['id'];
+  positive: TReview['positive'];
+  negative: TReview['negative'];
   rating: number;
 };

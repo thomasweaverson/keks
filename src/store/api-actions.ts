@@ -1,36 +1,35 @@
 import { APIRoute } from "../const/infrastructure";
 import { dropToken, saveToken } from "../services/token";
 import {
-  type ProductExtended,
-  type Product,
-  type CategoryWithTypes,
-  type Review,
-  type ReviewPosting,
+  type TProductExtended,
+  type TProduct,
+  type TCategoryWithTypes,
+  type TReview,
+  type TReviewPosting,
 } from "../types/product";
 import type {
-  AuthData,
-  RegistrationData,
-  RegistrationPayload,
-  RegistrationResult,
-  UploadAvatarData,
-  UserData,
+  TAuthData,
+  TRegistrationPayload,
+  TRegistrationResult,
+  TUserData,
 } from "../types/user";
 import { createAppAsyncThunk } from "./create-app-async-thunk";
+import { resetFavorites } from "./slices/favorites/favorites.slice";
 
-export const fetchProductsAction = createAppAsyncThunk<Product[]>(
+export const fetchProductsAction = createAppAsyncThunk<TProduct[]>(
   "products/fetchAll",
   async (_arg, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Product[]>(APIRoute.Products);
+    const { data } = await api.get<TProduct[]>(APIRoute.Products);
     return data;
   },
 );
 
-export const fetchProductAction = createAppAsyncThunk<ProductExtended>(
+export const fetchProductAction = createAppAsyncThunk<TProductExtended>(
   "products/fetchSpecific",
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<ProductExtended>(
+    const { data } = await api.get<TProductExtended>(
       `${APIRoute.Products}/${id}`,
     );
     return data;
@@ -38,38 +37,38 @@ export const fetchProductAction = createAppAsyncThunk<ProductExtended>(
 );
 
 export const fetchCategoriesWithTypesAction = createAppAsyncThunk<
-  CategoryWithTypes[]
+  TCategoryWithTypes[]
 >("data/fetchCategoriesWithTypes", async (_arg, { extra }) => {
   const { api } = extra;
-  const { data } = await api.get<CategoryWithTypes[]>(APIRoute.Categories);
+  const { data } = await api.get<TCategoryWithTypes[]>(APIRoute.Categories);
   return data;
 });
 
-export const fetchFavoritesAction = createAppAsyncThunk<ProductExtended[]>(
+export const fetchFavoritesAction = createAppAsyncThunk<TProductExtended[]>(
   "favorites/fetchAll",
   async (_arg, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<ProductExtended[]>(APIRoute.Favorites);
+    const { data } = await api.get<TProductExtended[]>(APIRoute.Favorites);
     return data;
   },
 );
 
-export const setIsFavoriteAction = createAppAsyncThunk<ProductExtended>(
+export const setIsFavoriteAction = createAppAsyncThunk<TProductExtended>(
   "favorites/addToFavorites",
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.put<ProductExtended>(
+    const { data } = await api.put<TProductExtended>(
       `${APIRoute.Favorites}/${id}`,
     );
     return data;
   },
 );
 
-export const removeFromFavoritesAction = createAppAsyncThunk<ProductExtended>(
+export const removeFromFavoritesAction = createAppAsyncThunk<TProductExtended>(
   "favorites/removeFromFavorites",
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.delete<ProductExtended>(
+    const { data } = await api.delete<TProductExtended>(
       `${APIRoute.Favorites}/${id}`,
     );
     return data;
@@ -82,7 +81,7 @@ export const clearAllFavoritesAction = createAppAsyncThunk<void>(
     const { api } = extra;
     const state = getState();
 
-    const favorites = state.FAVORITES.favorites;
+    const favorites = state.Favorites.favorites;
 
     await Promise.all(
       favorites.map((product) =>
@@ -92,21 +91,21 @@ export const clearAllFavoritesAction = createAppAsyncThunk<void>(
   },
 );
 
-export const fetchReviewsAction = createAppAsyncThunk<Review[]>(
+export const fetchReviewsAction = createAppAsyncThunk<TReview[]>(
   "reviews/fetchAll",
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Review[]>(`${APIRoute.Reviews}/${id}`);
+    const { data } = await api.get<TReview[]>(`${APIRoute.Reviews}/${id}`);
     return data;
   },
 );
 
-export const postReviewAction = createAppAsyncThunk<Review, ReviewPosting>(
+export const postReviewAction = createAppAsyncThunk<TReview, TReviewPosting>(
   "reviews/postReview",
   async ({ id, positive, negative, rating }, { extra }) => {
     const { api } = extra;
 
-    const { data } = await api.post<Review>(`${APIRoute.Reviews}/${id}`, {
+    const { data } = await api.post<TReview>(`${APIRoute.Reviews}/${id}`, {
       positive,
       negative,
       rating,
@@ -115,22 +114,22 @@ export const postReviewAction = createAppAsyncThunk<Review, ReviewPosting>(
   },
 );
 
-export const fetchLastReviewAction = createAppAsyncThunk<Review>(
+export const fetchLastReviewAction = createAppAsyncThunk<TReview>(
   "reviews/fetchLast",
   async (_arg, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Review>(APIRoute.LastReview);
+    const { data } = await api.get<TReview>(APIRoute.LastReview);
     return data;
   },
 );
 
 export const registerUserAction = createAppAsyncThunk<
-  RegistrationResult,
-  RegistrationPayload
+  TRegistrationResult,
+  TRegistrationPayload
 >("user/register", async ({ name, email, password, avatar }, { extra }) => {
   const { api } = extra;
 
-  const { data: userData } = await api.post<UserData>(APIRoute.Registration, {
+  const { data: userData } = await api.post<TUserData>(APIRoute.Registration, {
     name,
     email,
     password,
@@ -143,13 +142,14 @@ export const registerUserAction = createAppAsyncThunk<
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const { data: updatedUserData } = await api.post<UserData>(
+    const { data: updatedUserData } = await api.post<TUserData>(
       APIRoute.UploadAvatar,
       formData,
       {
         headers: {
           "X-Token": userData.token,
         },
+        skipToast: true,
       },
     );
 
@@ -159,38 +159,22 @@ export const registerUserAction = createAppAsyncThunk<
   }
 });
 
-export const uploadAvatarAction = createAppAsyncThunk<
-  UserData,
-  UploadAvatarData
->("user/uploadAvatar", async ({ avatar, token }, { extra }) => {
-  const { api } = extra;
-
-  const formData = new FormData();
-  formData.append("avatar", avatar);
-
-  const { data } = await api.post<UserData>(APIRoute.UploadAvatar, formData, {
-    headers: {
-      "X-Token": token,
-    },
-  });
-
-  return data;
-});
-
-export const checkAuthAction = createAppAsyncThunk<UserData>(
+export const checkAuthAction = createAppAsyncThunk<TUserData>(
   "user/checkAuth",
   async (_arg, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<UserData>(APIRoute.Login);
+    const { data } = await api.get<TUserData>(APIRoute.Login, {
+      skipToast: true,
+    });
     return data;
   },
 );
 
-export const authorizeUserAction = createAppAsyncThunk<UserData, AuthData>(
+export const authorizeUserAction = createAppAsyncThunk<TUserData, TAuthData>(
   "user/authorize",
   async ({ email, password }, { extra }) => {
     const { api } = extra;
-    const { data } = await api.post<UserData>(APIRoute.Login, {
+    const { data } = await api.post<TUserData>(APIRoute.Login, {
       email,
       password,
     });
@@ -204,7 +188,7 @@ export const logoutAction = createAppAsyncThunk<void>(
   async (_arg, { dispatch, extra }) => {
     const { api } = extra;
     await api.delete(APIRoute.Logout);
-    dispatch(clearFavorites());
+    dispatch(resetFavorites());
     dropToken();
   },
 );

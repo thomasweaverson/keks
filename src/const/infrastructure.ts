@@ -3,8 +3,12 @@ export const BACKEND_URL = "https://grading.design.htmlacademy.pro/v0/keks";
 export const REQUEST_TIMEOUT = 3000;
 
 export const NameSpace = {
-  User: "USER",
-  App: "App",
+  Products: "Products",
+  Product: "Product",
+  User: "User",
+  Favorites: "Favorites",
+  Reviews: "Reviews",
+  Filter: "Filter",
 } as const;
 
 export const APIRoute = {
@@ -17,4 +21,16 @@ export const APIRoute = {
   UploadAvatar: "/users/upload",
   Login: "/users/login",
   Logout: "/uses/logout",
+} as const;
+
+export const AuthorizationStatus = {
+  Auth: "AUTH",
+  NoAuth: "NO_AUTH",
+  Unknown: "UNKNOWN",
+} as const;
+
+export const RegistrationStatus = {
+  Idle: "IDLE",
+  Success: "SUCCESS",
+  Error: "ERROR",
 } as const;

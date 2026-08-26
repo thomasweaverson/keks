@@ -1,22 +1,63 @@
 import type { AxiosInstance } from "axios";
 import type { store } from "../store";
+import type { TCategory, TCategoryWithTypes, TProduct, TProductExtended, TReview, TType } from "./product";
+import type { TUserData } from "./user";
+import type { TAuthStatus, TRegistrationStatus } from "./infrastructure";
 
-export type State = ReturnType<typeof store.getState>;
+export type TState = ReturnType<typeof store.getState>;
 
-export type AppDispatch = typeof store.dispatch;
+export type TAppDispatch = typeof store.dispatch;
 
-export type CustomServerError = {
+export type TCustomServerError = {
   status: number;
   message: string;
 };
 
-export type AppExtra = {
+export type TAppExtra = {
   api: AxiosInstance;
 };
 
-export type AppThunkConfig = {
-  dispatch: AppDispatch;
-  state: State;
-  extra: AppExtra;
-  rejectValue: CustomServerError;
+export type TAppThunkConfig = {
+  dispatch: TAppDispatch;
+  state: TState;
+  extra: TAppExtra;
+  rejectValue: TCustomServerError;
 };
+
+export type TProductsState = {
+  products: TProduct[];
+  isProductsLoading: boolean;
+  isProductsLoadingError: boolean;
+};
+
+export type TProductState = {
+  product: null | TProductExtended;
+  isProductLoading: boolean;
+  isProductLoadingError: boolean;
+}
+
+export type TUserState = {
+  authorizationStatus: TAuthStatus;
+  registrationStatus: TRegistrationStatus;
+  userInfo: null | TUserData;
+  isAvatarLoadingError: boolean;
+};
+
+export type TFavoritesState = {
+  favorites: TProductExtended[];
+  isFavoritesLoading: boolean;
+};
+
+export type TReviewsState = {
+  reviews: TReview[];
+  isReviewsLoading: boolean;
+  isReviewsLoadingError: boolean;
+  lastReview: null | TReview;
+};
+
+export type TFilterState = {
+  filters: TCategoryWithTypes[];
+  currentCategory: TCategory | null;
+  currentTypes: TType[];
+  isFiltersLoadingError: boolean;
+}

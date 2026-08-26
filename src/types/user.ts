@@ -1,40 +1,35 @@
-export type User = {
+export type TUser = {
   name: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
 };
 
-export type UserData = User & {
+export type TUserData = TUser & {
   email: string;
   token: string;
 };
 
-export type UserInfo = {
-  name: UserData["name"];
-  email: UserData["email"];
+export type TUserInfo = {
+  name: TUserData["name"];
+  email: TUserData["email"];
   avatarUrl?: string;
 };
 
-export type RegistrationData = {
-  name: UserData["name"];
-  email: UserData["email"];
+type TRegistrationData = {
+  name: TUserData["name"];
+  email: TUserData["email"];
   password: string;
 };
 
-export type RegistrationPayload = RegistrationData & {
+export type TRegistrationPayload = TRegistrationData & {
   avatar?: File | null;
 };
 
-export type RegistrationResult = {
-  user: UserData;
+export type TRegistrationResult = {
+  user: TUserData;
   isAvatarLoadingError: boolean;
 };
 
-export type UploadAvatarData = {
-  avatar: File;
-  token: string;
-};
-
-export type AuthData = {
-  email: UserData["email"];
-  password: RegistrationData["password"];
+export type TAuthData = {
+  email: TUserData["email"];
+  password: TRegistrationData["password"];
 };

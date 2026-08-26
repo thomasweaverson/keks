@@ -8,14 +8,27 @@ import { toast } from "react-toastify";
 import { StatusCodes } from "http-status-codes";
 import { BACKEND_URL, REQUEST_TIMEOUT } from "../const/infrastructure";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipToast?: boolean;
+  }
+  export interface InternalAxiosRequestConfig {
+    skipToast?: boolean;
+  }
+}
+
 type DetailMessageType = {
-  type: string;
-  message: string;
+  type?: string;
+  message?: string;
 };
 
 const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.BAD_REQUEST]: true,
+  [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true,
+  [StatusCodes.INTERNAL_SERVER_ERROR]: true,
+  [StatusCodes.BAD_GATEWAY]: true,
+  [StatusCodes.SERVICE_UNAVAILABLE]: true,
 };
 
 const shouldDisplayError = (response: AxiosResponse) =>
@@ -39,13 +52,19 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      if (error.response && shouldDisplayError(error.response)) {
-        const detailMessage = error.response.data;
+      const shouldSkipToast = error.config?.skipToast;
 
-        toast.warn(detailMessage.message);
+      if (!shouldSkipToast) {
+        if (error.response && shouldDisplayError(error.response)) {
+          const errorMessage =
+            error.response.data?.message || "Произошла ошибка при запросе";
+          toast.warn(errorMessage);
+        } else if (!error.response) {
+          toast.warn("Сервер недоступен или отсутствует подключение");
+        }
       }
 
-      throw error;
+      return Promise.reject(error);
     },
   );
 
