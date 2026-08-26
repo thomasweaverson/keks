@@ -34,3 +34,13 @@ export const RegistrationStatus = {
   Success: "SUCCESS",
   Error: "ERROR",
 } as const;
+
+export const AppRoute = {
+  Root: "/",
+  Registration: "/registration",
+  Login: "/login",
+  Catalog: "/catalog",
+  Product: "/product",
+  Favorites: "/favorites",
+  NotFound: "/404",
+};

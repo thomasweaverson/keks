@@ -1,7 +1,10 @@
-import type { AuthorizationStatus, RegistrationStatus } from "../const/infrastructure";
+import type {
+  AuthorizationStatus,
+  RegistrationStatus,
+} from "../const/infrastructure";
 
-export type TAuthStatus =
+export type TAuthorizationStatus =
   (typeof AuthorizationStatus)[keyof typeof AuthorizationStatus];
 
-  export type TRegistrationStatus =
+export type TRegistrationStatus =
   (typeof RegistrationStatus)[keyof typeof RegistrationStatus];

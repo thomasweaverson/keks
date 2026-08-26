@@ -3,20 +3,14 @@ export type TUser = {
   avatarUrl: string | null;
 };
 
-export type TUserData = TUser & {
+export type TUserInfo = TUser & {
   email: string;
   token: string;
 };
 
-export type TUserInfo = {
-  name: TUserData["name"];
-  email: TUserData["email"];
-  avatarUrl?: string;
-};
-
 type TRegistrationData = {
-  name: TUserData["name"];
-  email: TUserData["email"];
+  name: TUserInfo["name"];
+  email: TUserInfo["email"];
   password: string;
 };
 
@@ -25,11 +19,11 @@ export type TRegistrationPayload = TRegistrationData & {
 };
 
 export type TRegistrationResult = {
-  user: TUserData;
+  user: TUserInfo;
   isAvatarLoadingError: boolean;
 };
 
 export type TAuthData = {
-  email: TUserData["email"];
+  email: TUserInfo["email"];
   password: TRegistrationData["password"];
 };

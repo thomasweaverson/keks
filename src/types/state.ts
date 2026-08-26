@@ -1,8 +1,8 @@
 import type { AxiosInstance } from "axios";
 import type { store } from "../store";
 import type { TCategory, TCategoryWithTypes, TProduct, TProductExtended, TReview, TType } from "./product";
-import type { TUserData } from "./user";
-import type { TAuthStatus, TRegistrationStatus } from "./infrastructure";
+import type { TUserInfo } from "./user";
+import type { TAuthorizationStatus, TRegistrationStatus } from "./infrastructure";
 
 export type TState = ReturnType<typeof store.getState>;
 
@@ -37,9 +37,9 @@ export type TProductState = {
 }
 
 export type TUserState = {
-  authorizationStatus: TAuthStatus;
+  authorizationStatus: TAuthorizationStatus;
   registrationStatus: TRegistrationStatus;
-  userInfo: null | TUserData;
+  userInfo: null | TUserInfo;
   isAvatarLoadingError: boolean;
 };
 

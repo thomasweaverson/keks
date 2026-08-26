@@ -11,7 +11,7 @@ import type {
   TAuthData,
   TRegistrationPayload,
   TRegistrationResult,
-  TUserData,
+  TUserInfo,
 } from "../types/user";
 import { createAppAsyncThunk } from "./create-app-async-thunk";
 import { resetFavorites } from "./slices/favorites/favorites.slice";
@@ -129,7 +129,7 @@ export const registerUserAction = createAppAsyncThunk<
 >("user/register", async ({ name, email, password, avatar }, { extra }) => {
   const { api } = extra;
 
-  const { data: userData } = await api.post<TUserData>(APIRoute.Registration, {
+  const { data: userData } = await api.post<TUserInfo>(APIRoute.Registration, {
     name,
     email,
     password,
@@ -142,7 +142,7 @@ export const registerUserAction = createAppAsyncThunk<
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const { data: updatedUserData } = await api.post<TUserData>(
+    const { data: updatedUserData } = await api.post<TUserInfo>(
       APIRoute.UploadAvatar,
       formData,
       {
@@ -159,22 +159,22 @@ export const registerUserAction = createAppAsyncThunk<
   }
 });
 
-export const checkAuthAction = createAppAsyncThunk<TUserData>(
+export const checkAuthAction = createAppAsyncThunk<TUserInfo>(
   "user/checkAuth",
   async (_arg, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<TUserData>(APIRoute.Login, {
+    const { data } = await api.get<TUserInfo>(APIRoute.Login, {
       skipToast: true,
     });
     return data;
   },
 );
 
-export const authorizeUserAction = createAppAsyncThunk<TUserData, TAuthData>(
+export const authorizeUserAction = createAppAsyncThunk<TUserInfo, TAuthData>(
   "user/authorize",
   async ({ email, password }, { extra }) => {
     const { api } = extra;
-    const { data } = await api.post<TUserData>(APIRoute.Login, {
+    const { data } = await api.post<TUserInfo>(APIRoute.Login, {
       email,
       password,
     });
