@@ -27,6 +27,7 @@ export type TAppThunkConfig = {
 export type TProductsState = {
   products: TProduct[];
   isProductsLoading: boolean;
+  isProductsLoaded: boolean;
   isProductsLoadingError: boolean;
 };
 

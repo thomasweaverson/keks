@@ -8,3 +8,8 @@ export type TAuthorizationStatus =
 
 export type TRegistrationStatus =
   (typeof RegistrationStatus)[keyof typeof RegistrationStatus];
+
+export type TRouteHandle = {
+    hideHeader?: boolean;
+    hideFooter?: boolean;
+  };

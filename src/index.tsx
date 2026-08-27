@@ -1,7 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import "./style.css";
 import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter } from "react-router-dom";
 import { checkAuthAction } from "./store/api-actions";
 import { store } from "./store";
 import ReactDOM from "react-dom/client";
@@ -20,10 +19,8 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <HelmetProvider>
-        <BrowserRouter>
           <ToastContainer />
           <App />
-        </BrowserRouter>
       </HelmetProvider>
     </Provider>
   </React.StrictMode>,

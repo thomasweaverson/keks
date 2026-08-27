@@ -37,10 +37,10 @@ export const RegistrationStatus = {
 
 export const AppRoute = {
   Root: "/",
-  Registration: "/registration",
-  Login: "/login",
   Catalog: "/catalog",
-  Product: "/product",
+  Product: 'product/:id',
   Favorites: "/favorites",
-  NotFound: "/404",
-};
+  Login: "/login",
+  Registration: "/registration",
+} as const;
+

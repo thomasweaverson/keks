@@ -1,92 +1,35 @@
-import { useEffect, type JSX } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
-import { AppRoute, AuthorizationStatus } from "../../const/infrastructure";
-import {
-  fetchFavoritesAction,
-  fetchProductsAction,
-} from "../../store/api-actions";
-import { Helmet } from "react-helmet-async";
-import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "../protected-route/protected-route";
+import { RouterProvider } from 'react-router-dom';
+import { AuthorizationStatus } from '../../const/infrastructure';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getAuthorizationStatus } from '../../store/slices/user/user.selectors';
+import { useEffect } from 'react';
+import { fetchFavoritesAction, fetchProductsAction } from '../../store/api-actions';
+import { getIsProductsLoaded } from '../../store/slices/products/products.selectors';
+import { router } from './router';
 
-const App = (): JSX.Element => {
+
+
+const App = () => {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isProductsLoaded = useAppSelector(getIsProductsLoaded);
+  useEffect(() => {
+    if (authorizationStatus !== AuthorizationStatus.Unknown && !isProductsLoaded) {
+      dispatch(fetchProductsAction());
+    }
+  }, [authorizationStatus, dispatch, isProductsLoaded]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (authorizationStatus !== AuthorizationStatus.Unknown) {
-      if (isMounted) {
-        dispatch(fetchProductsAction());
-      }
-      if (authorizationStatus === AuthorizationStatus.Auth && isMounted) {
-        dispatch(fetchFavoritesAction());
-      }
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoritesAction());
     }
-
-    return () => {
-      isMounted = false;
-    };
   }, [authorizationStatus, dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
-    // return <Loading />;
-    return <p>loading... mock</p>;
+    return <p>Loading...</p>;
   }
 
-  return (
-    <>
-      <Helmet>
-        <title>Keks bakery</title>
-      </Helmet>
-      <Routes>
-        <Route path={AppRoute.Root} element={<Layout />}>
-          <Route index element={<Main />} />
-          <Route path={AppRoute.Catalog} element={<p>catalog mock</p>} />
-
-          {/* <Route path={`${AppRoute.Product}/:id`} element={<Product />} /> */}
-          <Route
-            path={`${AppRoute.Product}/:id`}
-            element={<p>Product Mock</p>}
-          />
-          <Route
-            path={AppRoute.Favorites}
-            element={
-              <ProtectedRoute>
-                {/* <Favorites /> */}
-                <p>favorites mock</p>
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-
-        <Route
-          path={AppRoute.Registration}
-          element={
-            <ProtectedRoute guestOnly>
-              {/* <Registration /> */}
-              <p>Registration page mock</p>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={AppRoute.Login}
-          element={
-            <ProtectedRoute guestOnly>
-              {/* <Login /> */}
-              <p>login page mock</p>
-            </ProtectedRoute>
-          }
-        />
-        {/* <Route path={AppRoute.NotFound} element={<NotFound />} />
-          <Route path="*" element={<NotFound />} /> */}
-        <Route path={AppRoute.NotFound} element={<p>404mock</p>} />
-        <Route path="*" element={<p>404mock</p>} />
-      </Routes>
-    </>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

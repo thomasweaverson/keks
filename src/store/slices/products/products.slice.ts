@@ -13,6 +13,7 @@ const initialState: TProductsState = {
   products: [],
   isProductsLoading: true,
   isProductsLoadingError: false,
+  isProductsLoaded: false,
 };
 
 export const productsSlice = createSlice({
@@ -29,11 +30,13 @@ export const productsSlice = createSlice({
         state.products = action.payload;
         state.isProductsLoading = false;
         state.isProductsLoadingError = false;
+        state.isProductsLoaded = true;
       })
       .addCase(fetchProductsAction.rejected, (state) => {
         state.products = [];
         state.isProductsLoading = false;
         state.isProductsLoadingError = true;
+        state.isProductsLoaded = false;
       })
       .addCase(setIsFavoriteAction.fulfilled, (state, action) => {
         const newFavoriteProduct = action.payload;
