@@ -6,6 +6,7 @@ import type { TRouteHandle } from "../../types/infrastructure";
 import ErrorPage from "../../pages/error-page/error-page";
 import LoginPage from "../../pages/login-page/login-page";
 import RegistrationPage from "../../pages/registration-page/registration-page";
+import NotFoundPage from "../../pages/not-found-page/not-found-page";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "*",
-            element: <p>404 Page</p>,
+            element: <NotFoundPage />,
             handle: { hideFooter: true } satisfies TRouteHandle,
           },
         ],
