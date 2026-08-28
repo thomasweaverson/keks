@@ -5,6 +5,7 @@ import ProtectedRoute from "../protected-route/protected-route";
 import type { TRouteHandle } from "../../types/infrastructure";
 import ErrorPage from "../../pages/error-page/error-page";
 import LoginPage from "../../pages/login-page/login-page";
+import RegistrationPage from "../../pages/registration-page/registration-page";
 
 export const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ export const router = createBrowserRouter([
             path: AppRoute.Registration,
             element: (
               <ProtectedRoute guestOnly>
-                <p>Registration Page</p>
+                <RegistrationPage />
               </ProtectedRoute>
             ),
             handle: {

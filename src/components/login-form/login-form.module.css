@@ -1,0 +1,15 @@
+.field {
+  position: relative;
+}
+
+.error {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+
+  font-size: 12px;
+  line-height: 16px;
+
+  color: #3a1919;
+}

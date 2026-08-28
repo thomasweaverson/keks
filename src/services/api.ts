@@ -29,6 +29,7 @@ const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.INTERNAL_SERVER_ERROR]: true,
   [StatusCodes.BAD_GATEWAY]: true,
   [StatusCodes.SERVICE_UNAVAILABLE]: true,
+  [StatusCodes.CONFLICT]: true
 };
 
 const shouldDisplayError = (response: AxiosResponse) =>

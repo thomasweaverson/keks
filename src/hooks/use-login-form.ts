@@ -1,0 +1,129 @@
+import {
+  useCallback,
+  useState,
+  type ChangeEvent,
+  type SubmitEvent,
+} from 'react';
+import type { LoginFormErrors, LoginFormValues } from '../components/login-form/types';
+import { useAppDispatch } from '.';
+import { validateEmail, validateForm, validatePassword } from '../components/login-form/utils';
+import { authorizeUserAction } from '../store/api-actions';
+
+
+const INITIAL_VALUES: LoginFormValues = {
+  email: '',
+  password: '',
+};
+
+export const useLoginForm = () => {
+  const dispatch = useAppDispatch();
+
+  const [values, setValues] =
+    useState<LoginFormValues>(INITIAL_VALUES);
+
+  const [errors, setErrors] =
+    useState<LoginFormErrors>({});
+
+  const [touched, setTouched] =
+    useState<Partial<Record<keyof LoginFormValues, boolean>>>({});
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      const field = name as keyof LoginFormValues;
+
+      setValues((current) => ({
+        ...current,
+        [field]: value,
+      }));
+
+      setTouched((current) => ({
+        ...current,
+        [field]: true,
+      }));
+
+      if (field === 'email') {
+        const error = validateEmail(value);
+
+        setErrors((current) => ({
+          ...current,
+          email: error,
+        }));
+
+        return;
+      }
+
+      if (field === 'password') {
+        const error = validatePassword(value);
+
+        setErrors((current) => ({
+          ...current,
+          password: error,
+        }));
+      }
+    },
+    []
+  );
+
+  const handleBlur = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      const field =
+        event.target.name as keyof LoginFormValues;
+
+      setTouched((current) => ({
+        ...current,
+        [field]: true,
+      }));
+    },
+    []
+  );
+
+  const handleSubmit = useCallback(
+    async (event: SubmitEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+      if (isSubmitting) {
+        return;
+      }
+
+      const validationErrors = validateForm(values);
+
+      setErrors(validationErrors);
+
+      setTouched({
+        email: true,
+        password: true,
+      });
+
+      if (Object.keys(validationErrors).length > 0) {
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      try {
+        await dispatch(
+          authorizeUserAction({
+            email: values.email.trim(),
+            password: values.password,
+          })
+        ).unwrap();
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [dispatch, isSubmitting, values]
+  );
+
+  return {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  };
+};

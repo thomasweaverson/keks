@@ -10,7 +10,6 @@ const HeaderUser = memo(() => {
   const dispatch = useAppDispatch();
   const userData = useAppSelector(getUserInfo);
   const favoritesCount = useAppSelector(getFavoritesCount);
-
   const handleLogout = useCallback(() => {
     dispatch(logoutAction());
   }, [dispatch]);
@@ -21,10 +20,7 @@ const HeaderUser = memo(() => {
         <div className="header__user-info">
           <div className="header__user-avatar">
             <picture>
-              <source
-                type="image/webp"
-                srcSet="/img/content/user-avatar.webp, /img/content/user-avatar@2x.webp 2x"
-              />
+
               <img
                 src={userData?.avatarUrl ?? '/img/content/user-avatar.jpg'}
                 srcSet="/img/content/user-avatar@2x.jpg 2x"

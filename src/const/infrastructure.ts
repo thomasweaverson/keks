@@ -20,7 +20,7 @@ export const APIRoute = {
   Registration: "/users/registration",
   UploadAvatar: "/users/upload",
   Login: "/users/login",
-  Logout: "/uses/logout",
+  Logout: "/users/logout",
 } as const;
 
 export const AuthorizationStatus = {

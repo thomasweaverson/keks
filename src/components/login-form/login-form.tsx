@@ -1,90 +1,36 @@
-import { useState, type ChangeEvent, type SubmitEvent } from "react";
-import { useAppDispatch } from "../../hooks";
-import { authorizeUserAction } from "../../store/api-actions";
-import { EMAIL_REGEXP, PASSWORD_REGEXP } from "../../const/regexp";
-import { toast } from "react-toastify";
+import { useLoginForm } from '../../hooks/use-login-form';
+import styles from './login-form.module.css';
 
-export const LoginForm = () => {
-  const dispatch = useAppDispatch();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+const LoginForm = () => {
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  } = useLoginForm();
 
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
+  const getFieldClassName = (
+    field: keyof typeof values
+  ): string => {
+    const classes = [
+      'custom-input',
+      'login-page__field',
+      styles.field,
+    ];
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = evt.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors = { email: "", password: "" };
-    let isValid = true;
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Введите e-mail";
-      isValid = false;
-    } else if (!EMAIL_REGEXP.test(formData.email)) {
-      newErrors.email =
-        "Введите корректный e-mail (например, user@example.com)";
-      isValid = false;
+    if (touched[field]) {
+      classes.push(
+        errors[field]
+          ? 'is-invalid'
+          : 'is-valid'
+      );
     }
 
-    if (!formData.password) {
-      newErrors.password = "Введите пароль";
-      isValid = false;
-    } else if (!PASSWORD_REGEXP.test(formData.password)) {
-      newErrors.password =
-        "Пароль должен содержать минимум 1 букву, 1 цифру и не иметь пробелов";
-      isValid = false;
-    }
-    console.log(newErrors);
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = async (evt: SubmitEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-
-    const isValid = validateForm();
-
-    if (isSubmitting) {
-      return;
-    }
-
-    if (!isValid) {
-      if (errors.email) {
-        toast.warn(errors.email);
-      }
-      if (errors.password) {
-        toast.warn(errors.password);
-      }
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-
-      await dispatch(
-        authorizeUserAction({
-          email: formData.email.trim(),
-          password: formData.password,
-        }),
-      ).unwrap();
-    } finally {
-      setIsSubmitting(false);
-    }
+    return classes.join(' ');
   };
 
   return (
@@ -97,34 +43,72 @@ export const LoginForm = () => {
         noValidate
       >
         <div className="login-page__fields">
-          <div className="custom-input login-page__field">
+          <div className={getFieldClassName('email')}>
             <label>
-              <span className="custom-input__label">Введите вашу почту</span>
+              <span className="custom-input__label">
+                Введите вашу почту
+              </span>
+
               <input
                 type="email"
                 name="email"
                 placeholder="Почта"
-                value={formData.email}
-                onChange={handleInputChange}
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 disabled={isSubmitting}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={
+                  errors.email
+                    ? 'login-email-error'
+                    : undefined
+                }
                 required
               />
             </label>
+
+            {errors.email && (
+              <span
+                id="login-email-error"
+                className={styles.error}
+              >
+                {errors.email}
+              </span>
+            )}
           </div>
 
-          <div className="custom-input login-page__field">
+          <div className={getFieldClassName('password')}>
             <label>
-              <span className="custom-input__label">Введите ваш пароль</span>
+              <span className="custom-input__label">
+                Введите ваш пароль
+              </span>
+
               <input
                 type="password"
                 name="password"
                 placeholder="Пароль"
-                value={formData.password}
-                onChange={handleInputChange}
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
                 disabled={isSubmitting}
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={
+                  errors.password
+                    ? 'login-password-error'
+                    : undefined
+                }
                 required
               />
             </label>
+
+            {errors.password && (
+              <span
+                id="login-password-error"
+                className={styles.error}
+              >
+                {errors.password}
+              </span>
+            )}
           </div>
         </div>
 
@@ -133,7 +117,7 @@ export const LoginForm = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Вход..." : "Войти"}
+          {isSubmitting ? 'Вход...' : 'Войти'}
         </button>
       </form>
     </div>
