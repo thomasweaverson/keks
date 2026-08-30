@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import "./style.css";
 import "react-toastify/dist/ReactToastify.css";
+import 'leaflet/dist/leaflet.css';
 import { checkAuthAction } from "./store/api-actions";
 import { store } from "./store";
 import ReactDOM from "react-dom/client";

@@ -53,7 +53,7 @@ export const fetchFavoritesAction = createAppAsyncThunk<TProductExtended[]>(
   },
 );
 
-export const setIsFavoriteAction = createAppAsyncThunk<TProductExtended>(
+export const setIsFavoriteAction = createAppAsyncThunk<TProductExtended, string>(
   "favorites/addToFavorites",
   async (id, { extra }) => {
     const { api } = extra;
@@ -64,7 +64,7 @@ export const setIsFavoriteAction = createAppAsyncThunk<TProductExtended>(
   },
 );
 
-export const removeFromFavoritesAction = createAppAsyncThunk<TProductExtended>(
+export const removeFromFavoritesAction = createAppAsyncThunk<TProductExtended, string>(
   "favorites/removeFromFavorites",
   async (id, { extra }) => {
     const { api } = extra;

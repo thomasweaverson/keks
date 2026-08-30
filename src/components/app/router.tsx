@@ -7,6 +7,7 @@ import ErrorPage from "../../pages/error-page/error-page";
 import LoginPage from "../../pages/login-page/login-page";
 import RegistrationPage from "../../pages/registration-page/registration-page";
 import NotFoundPage from "../../pages/not-found-page/not-found-page";
+import MainPage from "../../pages/main-page/main-page";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <p>Main Page</p>,
+            element: <MainPage />,
           },
           {
             path: AppRoute.Catalog,
