@@ -40,6 +40,7 @@ const App = () => {
   }, [authorizationStatus, dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
+    //! НЕ ЗАБЫТЬ
     return <p>Loading...</p>;
   }
 

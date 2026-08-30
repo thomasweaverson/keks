@@ -8,6 +8,7 @@ import LoginPage from "../../pages/login-page/login-page";
 import RegistrationPage from "../../pages/registration-page/registration-page";
 import NotFoundPage from "../../pages/not-found-page/not-found-page";
 import MainPage from "../../pages/main-page/main-page";
+import FavoritesPage from "../../pages/favorites-page/favorites-page";
 
 export const router = createBrowserRouter([
   {
@@ -26,14 +27,14 @@ export const router = createBrowserRouter([
             element: <p>Catalog Page</p>,
           },
           {
-            path: AppRoute.Product, // 'product/:id'
+            path: `${AppRoute.Product}/:id`, // 'product/:id'
             element: <p>Product Page</p>,
           },
           {
             path: AppRoute.Favorites,
             element: (
               <ProtectedRoute>
-                <p>Favorites Page</p>
+                <FavoritesPage />
               </ProtectedRoute>
             ),
           },

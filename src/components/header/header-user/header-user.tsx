@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { getUserInfo } from '../../../store/slices/user/user.selectors';
 import { getFavoritesCount } from '../../../store/slices/favorites/favorites.selectors';
@@ -8,6 +8,7 @@ import { AppRoute } from '../../../const/infrastructure';
 
 const HeaderUser = memo(() => {
   const dispatch = useAppDispatch();
+  const location = useLocation()
   const userData = useAppSelector(getUserInfo);
   const favoritesCount = useAppSelector(getFavoritesCount);
   const handleLogout = useCallback(() => {
@@ -35,7 +36,7 @@ const HeaderUser = memo(() => {
       </div>
 
       <div className="header__buttons">
-        <Link className="header__favourite" to={AppRoute.Favorites}>
+        <Link className="header__favourite" to={AppRoute.Favorites} state={{ from: location }}>
           <span className="header__favourite-icon">
             <svg width="33" height="29" aria-hidden="true">
               <use href="#icon-favourite" />

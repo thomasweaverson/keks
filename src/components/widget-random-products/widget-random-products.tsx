@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { TProduct } from "../../types/product";
 import Card from "../card/card";
 import { AppRoute } from "../../const/infrastructure";
@@ -10,6 +10,8 @@ const WidgetRandomProducts = ({ products }: TRandomProductsProps) => {
   if (!products) {
     return null;
   }
+  const location = useLocation();
+  
   return (
     <section className="random-main">
       <div className="container">
@@ -22,7 +24,11 @@ const WidgetRandomProducts = ({ products }: TRandomProductsProps) => {
           ))}
 
           <li className="random-main__item">
-            <Link className="random-main__link" to={AppRoute.Catalog}>
+            <Link
+              className="random-main__link"
+              to={AppRoute.Catalog}
+              state={{ from: location }}
+            >
               <div className="random-main__icon-wrapper">
                 <div className="random-main__icon">
                   <svg width="120" height="130" aria-hidden="true">

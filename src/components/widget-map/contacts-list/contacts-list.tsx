@@ -46,7 +46,9 @@ const ContactsList = ({
                   height="24"
                   aria-hidden="true"
                 >
-                  <use href="#icon-keks-footprint" />
+                  <use
+                    href={`#icon-keks-footprint${location.name === Locations.Manufacture.name ? "-production" : ""}`}
+                  />
                 </svg>
               </address>
             </div>
