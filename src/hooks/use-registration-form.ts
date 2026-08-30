@@ -89,7 +89,14 @@ export const useRegistrationForm = () => {
     }
 
     if (fieldName === "avatar") {
-      void validateAvatar(files?.[0] ?? null).then((error) => {
+      const file = files?.[0] ?? null;
+
+      setErrors((current) => ({
+        ...current,
+        avatar: undefined,
+      }));
+
+      void validateAvatar(file).then((error) => {
         setErrors((current) => ({
           ...current,
           avatar: error,

@@ -2,6 +2,18 @@
   position: relative;
 }
 
+
+.avatarPreview {
+  position: absolute;
+  top: 50%;
+  right: 70px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  transform: translateY(-50%);
+}
+
 .error {
   position: absolute;
   top: calc(100% + 4px);

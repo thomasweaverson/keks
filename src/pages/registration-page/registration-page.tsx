@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../const/infrastructure";
-import RegistrationForm from "../../components/registration-form/registration-form.";
+import RegistrationForm from "../../components/registration-form/registration-form";
 
 const RegistrationPage = () => {
   return (

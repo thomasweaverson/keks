@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRegistrationForm } from "../../hooks/use-registration-form";
 import styles from "./registration-form.module.css";
 
@@ -11,6 +12,23 @@ const RegistrationForm = () => {
     handleBlur,
     handleSubmit,
   } = useRegistrationForm();
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!values.avatar || errors.avatar) {
+      setAvatarPreview(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(values.avatar);
+
+    setAvatarPreview(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [values.avatar, errors.avatar]);
 
   const getFieldClassName = (field: keyof typeof values): string => {
     if (!touched[field]) {
@@ -80,10 +98,7 @@ const RegistrationForm = () => {
             </label>
 
             {errors.email && (
-              <span
-                id="registration-email-error"
-                className={styles.error}
-              >
+              <span id="registration-email-error" className={styles.error}>
                 {errors.email}
               </span>
             )}
@@ -109,10 +124,7 @@ const RegistrationForm = () => {
             </label>
 
             {errors.password && (
-              <span
-                id="registration-password-error"
-                className={styles.error}
-              >
+              <span id="registration-password-error" className={styles.error}>
                 {errors.password}
               </span>
             )}
@@ -137,11 +149,16 @@ const RegistrationForm = () => {
               />
             </label>
 
+            {avatarPreview && (
+              <img
+                className={styles.avatarPreview}
+                src={avatarPreview}
+                alt="Предпросмотр выбранного аватара"
+              />
+            )}
+
             {errors.avatar && (
-              <span
-                id="registration-avatar-error"
-                className={styles.error}
-              >
+              <span id="registration-avatar-error" className={styles.error}>
                 {errors.avatar}
               </span>
             )}
