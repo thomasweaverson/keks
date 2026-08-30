@@ -7,3 +7,6 @@ export const getIsProductsLoaded = (
 
 export const getProducts = (state: Pick<TState, typeof NameSpace.Products>) =>
   state[NameSpace.Products].products;
+
+export const getRandomPack = (state: Pick<TState, typeof NameSpace.Products>) =>
+  state[NameSpace.Products].randomPack;

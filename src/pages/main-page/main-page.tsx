@@ -3,12 +3,11 @@ import WidgetLastReview from "../../components/widget-last-review/widget-last-re
 import WidgetMap from "../../components/widget-map/widget-map";
 import WidgetRandomProducts from "../../components/widget-random-products/widget-random-products";
 import { useAppSelector } from "../../hooks";
-import { getProducts } from "../../store/slices/products/products.selectors";
-import { getRandomThree } from "./utils";
+import { getRandomPack } from "../../store/slices/products/products.selectors";
+
 
 const MainPage = () => {
-  const products = useAppSelector(getProducts);
-  const randomThreeProducts = getRandomThree(products);
+  const randomThreeProducts = useAppSelector(getRandomPack);
 
   return (
     <>

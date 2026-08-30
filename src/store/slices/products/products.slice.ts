@@ -8,12 +8,14 @@ import {
   setIsFavoriteAction,
 } from "../../api-actions";
 import { resetFavorites } from "../favorites/favorites.slice";
+import { getRandomThree } from "../../../pages/main-page/utils";
 
 const initialState: TProductsState = {
   products: [],
   isProductsLoading: true,
   isProductsLoadingError: false,
   isProductsLoaded: false,
+  randomPack: null,
 };
 
 export const productsSlice = createSlice({
@@ -31,6 +33,8 @@ export const productsSlice = createSlice({
         state.isProductsLoading = false;
         state.isProductsLoadingError = false;
         state.isProductsLoaded = true;
+
+        state.randomPack = getRandomThree(action.payload);
       })
       .addCase(fetchProductsAction.rejected, (state) => {
         state.products = [];
@@ -46,6 +50,15 @@ export const productsSlice = createSlice({
         if (index !== -1) {
           state.products[index].isFavorite = true;
         }
+
+        if (state.randomPack !== null) {
+          const index = state.randomPack.findIndex(
+            (product) => product.id === newFavoriteProduct.id,
+          );
+          if (index !== -1) {
+            state.randomPack[index].isFavorite = true;
+          }
+        }
       })
       .addCase(removeFromFavoritesAction.fulfilled, (state, action) => {
         const notFavoriteProduct = action.payload;
@@ -54,6 +67,15 @@ export const productsSlice = createSlice({
         );
         if (index !== -1) {
           state.products[index].isFavorite = false;
+        }
+
+        if (state.randomPack !== null) {
+          const index = state.randomPack.findIndex(
+            (product) => product.id === notFavoriteProduct.id,
+          );
+          if (index !== -1) {
+            state.randomPack[index].isFavorite = false;
+          }
         }
       })
       .addCase(clearAllFavoritesAction.fulfilled, (state) => {
