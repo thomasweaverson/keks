@@ -1,18 +1,24 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { NameSpace } from "../../../const/infrastructure";
 import type { TState } from "../../../types/state";
-import { getCurrentCategory, getCurrentTypes } from "../filter/filter.selectors";
+import {
+  getCurrentCategory,
+  getCurrentTypes,
+} from "../filter/filter.selectors";
 
 export const getIsProductsLoaded = (
   state: Pick<TState, typeof NameSpace.Products>,
 ) => state[NameSpace.Products].isProductsLoaded;
+
+export const getIsProductsLoadingError = (
+  state: Pick<TState, typeof NameSpace.Products>,
+) => state[NameSpace.Products].isProductsLoadingError;
 
 export const getProducts = (state: Pick<TState, typeof NameSpace.Products>) =>
   state[NameSpace.Products].products;
 
 export const getRandomPack = (state: Pick<TState, typeof NameSpace.Products>) =>
   state[NameSpace.Products].randomPack;
-
 
 export const getFilteredProducts = createSelector(
   [getProducts, getCurrentCategory, getCurrentTypes],

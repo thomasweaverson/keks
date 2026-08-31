@@ -1,12 +1,22 @@
 import BackLink from "../../components/back-link/back-link";
 import { useAppSelector } from "../../hooks";
-import { getFilteredProducts } from "../../store/slices/products/products.selectors";
+import { getIsFiltersLoadingError } from "../../store/slices/filter/filter.selectors";
+import {
+  getFilteredProducts,
+  getIsProductsLoadingError,
+} from "../../store/slices/products/products.selectors";
+import ErrorPage from "../error-page/error-page";
 import Catalog from "./catalog/catalog";
 import Filter from "./filter/filter";
 import NotFoundProducts from "./not-found-products/not-found-products";
 
 const CatalogPage = () => {
   const filteredProducts = useAppSelector(getFilteredProducts);
+  const isFiltersLoadingError = useAppSelector(getIsFiltersLoadingError);
+  const isProductsLoadingError = useAppSelector(getIsProductsLoadingError);
+  if (isFiltersLoadingError || isProductsLoadingError) {
+    return <ErrorPage />;
+  }
 
   return (
     <>
