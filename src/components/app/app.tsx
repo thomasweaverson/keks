@@ -5,18 +5,21 @@ import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
 import { useEffect } from "react";
 import {
   fetchFavoritesAction,
+  fetchFiltersAction,
   fetchLastReviewAction,
   fetchProductsAction,
 } from "../../store/api-actions";
 import { getIsProductsLoaded } from "../../store/slices/products/products.selectors";
 import { router } from "./router";
 import { getLastReview } from "../../store/slices/reviews/reviews.selectors";
+import { getFilters } from "../../store/slices/filter/filter.selectors";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isProductsLoaded = useAppSelector(getIsProductsLoaded);
   const lastReview = useAppSelector(getLastReview);
+  const filters = useAppSelector(getFilters);
 
   useEffect(() => {
     if (
@@ -30,6 +33,12 @@ const App = () => {
   useEffect(() => {
     if (!lastReview) {
       dispatch(fetchLastReviewAction());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (filters.length === 0) {
+      dispatch(fetchFiltersAction());
     }
   }, []);
 

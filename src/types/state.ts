@@ -1,12 +1,12 @@
 import type { AxiosInstance } from "axios";
 import type { store } from "../store";
 import type {
-  TCategory,
   TCategoryWithTypes,
   TProduct,
+  TProductCategory,
   TProductExtended,
+  TProductType,
   TReview,
-  TType,
 } from "./product";
 import type { TUserInfo } from "./user";
 import type {
@@ -69,7 +69,7 @@ export type TReviewsState = {
 
 export type TFilterState = {
   filters: TCategoryWithTypes[];
-  currentCategory: TCategory | null;
-  currentTypes: TType[];
+  currentCategory: TProductCategory | null;
+  currentTypes: TProductType[];
   isFiltersLoadingError: boolean;
 };

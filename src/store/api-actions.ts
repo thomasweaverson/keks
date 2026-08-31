@@ -36,9 +36,9 @@ export const fetchProductAction = createAppAsyncThunk<TProductExtended>(
   },
 );
 
-export const fetchCategoriesWithTypesAction = createAppAsyncThunk<
+export const fetchFiltersAction = createAppAsyncThunk<
   TCategoryWithTypes[]
->("data/fetchCategoriesWithTypes", async (_arg, { extra }) => {
+>("data/fetchFilters", async (_arg, { extra }) => {
   const { api } = extra;
   const { data } = await api.get<TCategoryWithTypes[]>(APIRoute.Categories);
   return data;

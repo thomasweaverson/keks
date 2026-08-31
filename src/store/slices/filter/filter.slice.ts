@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { TFilterState } from "../../../types/state";
 import { NameSpace } from "../../../const/infrastructure";
-import { fetchCategoriesWithTypesAction } from "../../api-actions";
-import type { TCategory, TType } from "../../../types/product";
+import { fetchFiltersAction } from "../../api-actions";
+import type { TProductCategory, TProductType } from "../../../types/product";
 
 const initialState: TFilterState = {
   filters: [],
@@ -19,13 +19,13 @@ export const filterSlice = createSlice({
       state.currentCategory = null;
       state.currentTypes = [];
     },
-    setCategory: (state, action: PayloadAction<TCategory>) => {
+    setCategory: (state, action: PayloadAction<TProductCategory | null>) => {
       if (state.currentCategory !== action.payload) {
         state.currentCategory = action.payload;
         state.currentTypes = [];
       }
     },
-    toggleType: (state, action: PayloadAction<TType>) => {
+    toggleType: (state, action: PayloadAction<TProductType>) => {
       const type = action.payload;
       const index = state.currentTypes.indexOf(type);
 
@@ -38,13 +38,14 @@ export const filterSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchCategoriesWithTypesAction.fulfilled, (state, action) => {
+      .addCase(fetchFiltersAction.fulfilled, (state, action) => {
         state.filters = action.payload;
         state.isFiltersLoadingError = false;
       })
-      .addCase(fetchCategoriesWithTypesAction.rejected, (state) => {
-        state.filters = [];
+      .addCase(fetchFiltersAction.rejected, (state) => {
         state.isFiltersLoadingError = true;
       });
   },
 });
+
+export const { resetFilter, setCategory, toggleType } = filterSlice.actions;

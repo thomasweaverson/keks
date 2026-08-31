@@ -9,6 +9,7 @@ import RegistrationPage from "../../pages/registration-page/registration-page";
 import NotFoundPage from "../../pages/not-found-page/not-found-page";
 import MainPage from "../../pages/main-page/main-page";
 import FavoritesPage from "../../pages/favorites-page/favorites-page";
+import CatalogPage from "../../pages/catalog-page/catalog-page";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
           },
           {
             path: AppRoute.Catalog,
-            element: <p>Catalog Page</p>,
+            element: <CatalogPage />,
           },
           {
             path: `${AppRoute.Product}/:id`, // 'product/:id'

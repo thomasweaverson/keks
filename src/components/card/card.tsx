@@ -1,14 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { TProduct } from "../../types/product";
-import { AppRoute } from "../../const/infrastructure";
+import { AppRoute, AuthorizationStatus } from "../../const/infrastructure";
 import clsx from "clsx";
 import type { MouseEvent } from "react";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   removeFromFavoritesAction,
   setIsFavoriteAction,
 } from "../../store/api-actions";
 import { formatPrice } from "../../utils/common";
+import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
 
 type TCardProps = {
   product: TProduct;
@@ -17,7 +18,10 @@ type TCardProps = {
 
 const Card = ({ product, isFull = false }: TCardProps) => {
   const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const location = useLocation();
+  const navigate = useNavigate();
+
   const {
     id,
     isFavorite,
@@ -31,6 +35,11 @@ const Card = ({ product, isFull = false }: TCardProps) => {
 
   const handleFavoriteButtonClick = (evt: MouseEvent) => {
     evt.preventDefault();
+
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login, { state: { from: location } });
+      return;
+    }
     if (isFavorite) {
       dispatch(removeFromFavoritesAction(id));
     } else {

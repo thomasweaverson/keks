@@ -1,30 +1,19 @@
 import type { TUser } from "./user";
 
-export type TCategory = "cheesecake" | "bisque" | "shortbread" | "dessert";
+export type TProductCategory = "cheesecake" | "bisque" | "shortbread" | "dessert";
 
-export type TType =
-  | "lemon"
-  | "chocolate"
-  | "vanilla"
-  | "vegetarian"
-  | "honey-cake"
-  | "new-york"
-  | "tart"
-  | "funnel-cake"
-  | "basket-cake"
-  | "chocolate-muffin"
-  | "brand-muffin";
+export type TProductType = string;
 
 export type TCategoryWithTypes = {
-  category: TCategory;
-  types: TType[];
+  category: TProductCategory;
+  types: TProductType[];
 };
 
 export type TProduct = {
   id: string;
   title: string;
-  category: TCategory;
-  type: TType;
+  category: TProductCategory;
+  type: TProductType;
   price: number;
   previewImage: string;
   previewImageWebp: string;
