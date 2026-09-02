@@ -13,6 +13,7 @@ import { getIsProductsLoaded } from "../../store/slices/products/products.select
 import { router } from "./router";
 import { getLastReview } from "../../store/slices/reviews/reviews.selectors";
 import { getFilters } from "../../store/slices/filter/filter.selectors";
+import LoaderScreen from "../../pages/loading-screen/loading-screen";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -49,8 +50,7 @@ const App = () => {
   }, [authorizationStatus, dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
-    //! НЕ ЗАБЫТЬ
-    return <p>Loading...</p>;
+    return <LoaderScreen />;
   }
 
   return <RouterProvider router={router} />;

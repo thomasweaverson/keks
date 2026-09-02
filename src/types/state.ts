@@ -13,6 +13,7 @@ import type {
   TAuthorizationStatus,
   TRegistrationStatus,
 } from "./infrastructure";
+import type { TReviewsFilter, TReviewsSortOrder } from "./business";
 
 export type TState = ReturnType<typeof store.getState>;
 
@@ -65,6 +66,8 @@ export type TReviewsState = {
   isReviewsLoading: boolean;
   isReviewsLoadingError: boolean;
   lastReview: null | TReview;
+  currentReviewsFilter: TReviewsFilter;
+  currentReviewsSortOrder: TReviewsSortOrder;
 };
 
 export type TFilterState = {

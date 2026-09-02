@@ -10,6 +10,7 @@ import EmptyFavorites from "./empty-favorites/empty-favorites";
 import Summary from "./summary/summary";
 import { clearAllFavoritesAction } from "../../store/api-actions";
 import CatalogList from "../../components/catalog-list/catalog-list";
+import { Helmet } from "react-helmet-async";
 
 const FavoritesPage = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,9 @@ const FavoritesPage = () => {
   }
   return (
     <div className="favorites-page">
+      <Helmet>
+        <title>Кондитерская Кекс - Избранное</title>{" "}
+      </Helmet>
       <h1 className="visually-hidden">Избранное</h1>
       <BackLink />
       <Summary favoritesCount={favoritesCount} totalPrice={totalPrice} />

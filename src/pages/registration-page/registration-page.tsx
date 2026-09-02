@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../const/infrastructure";
 import RegistrationForm from "../../components/registration-form/registration-form";
+import { Helmet } from "react-helmet-async";
 
 const RegistrationPage = () => {
   return (
     <section className="register-page">
+      <Helmet>
+        <title>Кондитерская Кекс - Регистрация</title>
+      </Helmet>
       <div className="register-page__header">
         <div className="register-page__img-wrap">
           <img

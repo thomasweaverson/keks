@@ -42,4 +42,5 @@ export const AppRoute = {
   Favorites: "/favorites",
   Login: "/login",
   Registration: "/registration",
+  NotFound: "not-found"
 } as const;

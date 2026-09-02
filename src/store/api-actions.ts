@@ -25,7 +25,7 @@ export const fetchProductsAction = createAppAsyncThunk<TProduct[]>(
   },
 );
 
-export const fetchProductAction = createAppAsyncThunk<TProductExtended>(
+export const fetchProductAction = createAppAsyncThunk<TProductExtended, string>(
   "products/fetchSpecific",
   async (id, { extra }) => {
     const { api } = extra;
@@ -91,7 +91,7 @@ export const clearAllFavoritesAction = createAppAsyncThunk<void>(
   },
 );
 
-export const fetchReviewsAction = createAppAsyncThunk<TReview[]>(
+export const fetchReviewsAction = createAppAsyncThunk<TReview[], TProduct["id"]>(
   "reviews/fetchAll",
   async (id, { extra }) => {
     const { api } = extra;

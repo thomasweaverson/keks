@@ -4,6 +4,7 @@ import { NameSpace } from "../../../const/infrastructure";
 import {
   clearAllFavoritesAction,
   fetchProductAction,
+  postReviewAction,
   removeFromFavoritesAction,
   setIsFavoriteAction,
 } from "../../api-actions";
@@ -19,9 +20,7 @@ export const productSlice = createSlice({
   name: NameSpace.Product,
   initialState,
   reducers: {
-    resetProduct: (state) => {
-      state = initialState;
-    },
+    resetProduct: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -58,6 +57,14 @@ export const productSlice = createSlice({
         if (state.product?.isFavorite) {
           state.product.isFavorite = false;
         }
+      })
+      .addCase(postReviewAction.fulfilled, (state, action) => {
+        const prevCountOfReviews = Number(state.product?.reviewCount);
+        if (state.product) {
+          state.product.reviewCount = prevCountOfReviews + 1;
+        }
       });
   },
 });
+
+export const { resetProduct } = productSlice.actions;

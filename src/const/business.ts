@@ -8,6 +8,10 @@ export const RATING_STARS_COUNT = 5;
 
 export const CATALOG_CARDS_PER_STEP = 6;
 
+export const REVIEWS_PER_STEP = 2;
+
+export const DESCRIPTION_LENGTH = 140;
+
 export const ProductCategoryLabel = {
   cheesecake: "Чизкейк",
   bisque: "Бисквит",
@@ -28,3 +32,18 @@ export const ProductTypeLabel = {
   "chocolate-muffin": "Шоколадный маффин",
   "brand-muffin": "Фирменный маффин",
 } as const;
+
+export const ReviewsFilter = {
+  Any: "Любой",
+  High: "Высокий",
+  Low: "Низкий",
+} as const;
+
+export const DEFAULT_REVIEWS_FILTER = ReviewsFilter.Any;
+
+export const SortOrder = {
+  NEWEST: "newest",
+  OLDEST: "oldest",
+} as const;
+
+export const DEFAULT_REVIEWS_SORT_ORDER = SortOrder.NEWEST;

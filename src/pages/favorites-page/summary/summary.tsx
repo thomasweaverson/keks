@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { formatPrice } from "../../../utils/common";
+import { formatValue } from "../../../utils/common";
 import { pluralize } from "./utils";
 import { AppRoute } from "../../../const/infrastructure";
 
@@ -22,7 +22,7 @@ const Summary = ({ favoritesCount, totalPrice }: TSummaryProps) => {
           <div className="number-of-favourites__wrap-price">
             <p className="number-of-favourites__text">Всего</p>
             <p className="number-of-favourites__price">
-              {formatPrice(totalPrice)}
+              {formatValue(totalPrice, "price")}
             </p>
           </div>
         </div>

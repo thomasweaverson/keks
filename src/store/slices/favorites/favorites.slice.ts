@@ -17,10 +17,7 @@ export const favoritesSlice = createSlice({
   name: NameSpace.Favorites,
   initialState,
   reducers: {
-    resetFavorites: (state) => {
-      state.favorites = [];
-      state.isFavoritesLoading = false;
-    },
+    resetFavorites: () => initialState
   },
   extraReducers(builder) {
     builder

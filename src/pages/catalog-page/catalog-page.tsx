@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import BackLink from "../../components/back-link/back-link";
 import { useAppSelector } from "../../hooks";
 import { getIsFiltersLoadingError } from "../../store/slices/filter/filter.selectors";
@@ -20,6 +21,9 @@ const CatalogPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Кондитерская Кекс - Избранное</title>{" "}
+      </Helmet>
       <h1 className="visually-hidden">Каталог товаров</h1>
       <BackLink />
       <Filter />

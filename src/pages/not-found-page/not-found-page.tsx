@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../const/infrastructure";
+import { Helmet } from "react-helmet-async";
 
 const NotFoundPage = () => {
   return (
     <>
+      <Helmet>
+        <title>Кондитерская Кекс - 404</title>{" "}
+      </Helmet>
       <h1 className="visually-hidden">404</h1>
       <section className="error-page">
         <div className="container">

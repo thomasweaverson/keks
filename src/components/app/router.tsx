@@ -10,6 +10,7 @@ import NotFoundPage from "../../pages/not-found-page/not-found-page";
 import MainPage from "../../pages/main-page/main-page";
 import FavoritesPage from "../../pages/favorites-page/favorites-page";
 import CatalogPage from "../../pages/catalog-page/catalog-page";
+import ProductPage from "../../pages/product-page/product-page";
 
 export const router = createBrowserRouter([
   {
@@ -28,8 +29,8 @@ export const router = createBrowserRouter([
             element: <CatalogPage />,
           },
           {
-            path: `${AppRoute.Product}/:id`, // 'product/:id'
-            element: <p>Product Page</p>,
+            path: `${AppRoute.Product}/:id`,
+            element: <ProductPage />,
           },
           {
             path: AppRoute.Favorites,
@@ -62,6 +63,11 @@ export const router = createBrowserRouter([
               hideHeader: true,
               hideFooter: true,
             } satisfies TRouteHandle,
+          },
+          {
+            path: AppRoute.NotFound,
+            element: <NotFoundPage />,
+            handle: { hideFooter: true } satisfies TRouteHandle,
           },
           {
             path: "*",

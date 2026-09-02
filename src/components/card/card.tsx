@@ -8,7 +8,7 @@ import {
   removeFromFavoritesAction,
   setIsFavoriteAction,
 } from "../../store/api-actions";
-import { formatPrice } from "../../utils/common";
+import { formatValue } from "../../utils/common";
 import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
 
 type TCardProps = {
@@ -82,7 +82,7 @@ const Card = ({ product, isFull = false }: TCardProps) => {
         </svg>
       </button>
 
-      {isFull && <span className="card-item__price">{formatPrice(price)}</span>}
+      {isFull && <span className="card-item__price">{formatValue(price, "price")}</span>}
 
       <Link
         className="card-item__link"

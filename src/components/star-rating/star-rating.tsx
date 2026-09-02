@@ -27,7 +27,7 @@ const StarRating = ({
         height="30"
         aria-hidden="true"
       >
-        <use xlinkHref="#icon-star" />
+        <use href="#icon-star" />
       </svg>
     ))}
 
