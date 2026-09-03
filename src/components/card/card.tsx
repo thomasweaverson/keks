@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { TProduct } from "../../types/product";
 import { AppRoute, AuthorizationStatus } from "../../const/infrastructure";
 import clsx from "clsx";
-import type { MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   removeFromFavoritesAction,
@@ -21,6 +21,7 @@ const Card = ({ product, isFull = false }: TCardProps) => {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const location = useLocation();
   const navigate = useNavigate();
+  const [isFavoritePending, setIsFavoritePending] = useState(false);
 
   const {
     id,
@@ -33,17 +34,26 @@ const Card = ({ product, isFull = false }: TCardProps) => {
   } = product;
   const productPath = `${AppRoute.Product}/${id}`;
 
-  const handleFavoriteButtonClick = (evt: MouseEvent) => {
+  const handleFavoriteButtonClick = async (evt: MouseEvent) => {
     evt.preventDefault();
+
+    if (isFavoritePending) {
+      return;
+    }
 
     if (authorizationStatus !== AuthorizationStatus.Auth) {
       navigate(AppRoute.Login, { state: { from: location } });
       return;
     }
-    if (isFavorite) {
-      dispatch(removeFromFavoritesAction(id));
-    } else {
-      dispatch(setIsFavoriteAction(id));
+
+    setIsFavoritePending(true);
+
+    try {
+      await dispatch(
+        isFavorite ? removeFromFavoritesAction(id) : setIsFavoriteAction(id),
+      ).unwrap();
+    } finally {
+      setIsFavoritePending(false);
     }
   };
 
@@ -73,6 +83,7 @@ const Card = ({ product, isFull = false }: TCardProps) => {
           "card-item__favorites--active": isFavorite,
         })}
         onClick={handleFavoriteButtonClick}
+        aria-disabled={isFavoritePending}
       >
         <span className="visually-hidden">
           {isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
@@ -82,7 +93,9 @@ const Card = ({ product, isFull = false }: TCardProps) => {
         </svg>
       </button>
 
-      {isFull && <span className="card-item__price">{formatValue(price, "price")}</span>}
+      {isFull && (
+        <span className="card-item__price">{formatValue(price, "price")}</span>
+      )}
 
       <Link
         className="card-item__link"

@@ -34,6 +34,7 @@ export const productSlice = createSlice({
         state.product = action.payload;
       })
       .addCase(fetchProductAction.rejected, (state) => {
+        console.log('fetchProductAction.rejected')
         state.isProductLoadingError = true;
         state.isProductLoading = false;
         state.product = null;
@@ -58,7 +59,7 @@ export const productSlice = createSlice({
           state.product.isFavorite = false;
         }
       })
-      .addCase(postReviewAction.fulfilled, (state, action) => {
+      .addCase(postReviewAction.fulfilled, (state) => {
         const prevCountOfReviews = Number(state.product?.reviewCount);
         if (state.product) {
           state.product.reviewCount = prevCountOfReviews + 1;

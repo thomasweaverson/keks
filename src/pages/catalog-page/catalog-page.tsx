@@ -15,6 +15,7 @@ const CatalogPage = () => {
   const filteredProducts = useAppSelector(getFilteredProducts);
   const isFiltersLoadingError = useAppSelector(getIsFiltersLoadingError);
   const isProductsLoadingError = useAppSelector(getIsProductsLoadingError);
+
   if (isFiltersLoadingError || isProductsLoadingError) {
     return <ErrorPage />;
   }

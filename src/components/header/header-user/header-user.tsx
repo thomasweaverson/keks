@@ -42,7 +42,7 @@ const HeaderUser = memo(() => {
               <use href="#icon-favourite" />
             </svg>
           </span>
-          <span className="header__favourite-number">{favoritesCount}</span>
+          {favoritesCount > 0 && <span className="header__favourite-number">{favoritesCount}</span>}
           <span className="visually-hidden">Избранное</span>
         </Link>
 

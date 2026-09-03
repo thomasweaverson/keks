@@ -28,6 +28,7 @@ const Details = ({
   const dispatch = useAppDispatch();
   const userAuthorizationStatus = useAppSelector(getAuthorizationStatus);
   const navigate = useNavigate();
+  const [isFavoritePending, setIsFavoritePending] = useState(false);
 
   const {
     id,
@@ -44,14 +45,25 @@ const Details = ({
     previewImageWebp,
   } = product;
 
-  const handleFavoriteClick = (evt: MouseEvent) => {
+  const handleFavoriteClick = async (evt: MouseEvent) => {
     evt.preventDefault();
+    if (isFavoritePending) {
+      return;
+    }
+
     if (userAuthorizationStatus !== AuthorizationStatus.Auth) {
       navigate(AppRoute.Login);
-    } else if (isFavorite) {
-      dispatch(removeFromFavoritesAction(id));
-    } else {
-      dispatch(setIsFavoriteAction(id));
+      return;
+    }
+
+    setIsFavoritePending(true);
+
+    try {
+      await dispatch(
+        isFavorite ? removeFromFavoritesAction(id) : setIsFavoriteAction(id),
+      ).unwrap();
+    } finally {
+      setIsFavoritePending(false);
     }
   };
 
@@ -126,9 +138,10 @@ const Details = ({
               <div className="item-details__button-wrapper">
                 <button
                   className={clsx("item-details__like-button", {
-                    "item-details__like-button": isFavorite,
+                    "item-details__like-button--active": isFavorite,
                   })}
                   onClick={handleFavoriteClick}
+                  aria-disabled={isFavoritePending}
                 >
                   <svg width="45" height="37" aria-hidden="true">
                     <use href="#icon-like"></use>

@@ -1,6 +1,6 @@
 export const BACKEND_URL = "https://grading.design.htmlacademy.pro/v0/keks";
 
-export const REQUEST_TIMEOUT = 3000;
+export const REQUEST_TIMEOUT = 6000;
 
 export const NameSpace = {
   Products: "Products",
@@ -42,5 +42,5 @@ export const AppRoute = {
   Favorites: "/favorites",
   Login: "/login",
   Registration: "/registration",
-  NotFound: "not-found"
+  NotFound: "/not-found",
 } as const;

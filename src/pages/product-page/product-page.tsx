@@ -6,7 +6,10 @@ import {
   getProduct,
 } from "../../store/slices/product/product.selectors";
 import { useEffect, useState } from "react";
-import { fetchProductAction, fetchReviewsAction } from "../../store/api-actions";
+import {
+  fetchProductAction,
+  fetchReviewsAction,
+} from "../../store/api-actions";
 import { AppRoute, AuthorizationStatus } from "../../const/infrastructure";
 import { resetProduct } from "../../store/slices/product/product.slice";
 import LoaderScreen from "../loading-screen/loading-screen";
@@ -15,7 +18,11 @@ import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
 import BackLink from "../../components/back-link/back-link";
 import Details from "./details/details";
 import ReviewForm from "./review-form/review-form";
-import { getFilteredAndSortedReviews, getIsReviewsLoadingError, getReviews } from "../../store/slices/reviews/reviews.selectors";
+import {
+  getFilteredAndSortedReviews,
+  getIsReviewsLoadingError,
+  getReviews,
+} from "../../store/slices/reviews/reviews.selectors";
 import NoReviews from "./no-reviews/no-reviews";
 import ReviewsLoadingError from "./reviews-loading-error/reviews-loading-error";
 import FilterSortBar from "./filter-sort-bar/filter-sort-bar";
@@ -34,6 +41,7 @@ const ProductPage = () => {
   }
   const [isReviewFormShowing, setIsReviewFormShowing] =
     useState<boolean>(false);
+
   const isProductLoading = useAppSelector(getIsProductLoading);
   const isProductLoadingError = useAppSelector(getIsProductLoadingError);
   const userAuthorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -41,6 +49,12 @@ const ProductPage = () => {
   const preparedReviews = useAppSelector(getFilteredAndSortedReviews);
   const isReviewsLoadingError = useAppSelector(getIsReviewsLoadingError);
   const product = useAppSelector(getProduct);
+
+  useEffect(() => {
+    if (userAuthorizationStatus !== AuthorizationStatus.Auth) {
+      setIsReviewFormShowing(false);
+    }
+  }, [userAuthorizationStatus]);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,6 +73,7 @@ const ProductPage = () => {
     let isMounted = true;
 
     if (isProductLoadingError && isMounted) {
+      console.log("isProductLoadingError && isMounted");
       navigate(AppRoute.NotFound);
     }
 
@@ -82,7 +97,7 @@ const ProductPage = () => {
   return (
     <>
       <Helmet>
-        <title>Кондитерская Кекс - Регистрация</title>
+        <title>Кондитерская Кекс - Карточка товара</title>
       </Helmet>
       <ScrollToTop />
       <h1 className="visually-hidden">
@@ -97,12 +112,19 @@ const ProductPage = () => {
         onShowReviewFormClick={setIsReviewFormShowing}
         isReviewFormOpen={isReviewFormShowing}
       />
-      {isReviewFormShowing && <ReviewForm productId={id} />}
+      {isReviewFormShowing &&
+        userAuthorizationStatus === AuthorizationStatus.Auth && (
+          <ReviewForm productId={id} />
+        )}
       {reviews.length === 0 && !isReviewsLoadingError && <NoReviews />}
       {isReviewsLoadingError && <ReviewsLoadingError />}
       {reviews.length > 0 && !isReviewsLoadingError && <FilterSortBar />}
-      {preparedReviews.length > 0 && !isReviewsLoadingError && <ReviewsList reviews={preparedReviews} />}
-      {reviews.length !== 0 && preparedReviews.length === 0 && !isReviewsLoadingError && <NotFoundReviews />}
+      {preparedReviews.length > 0 && !isReviewsLoadingError && (
+        <ReviewsList reviews={preparedReviews} />
+      )}
+      {reviews.length !== 0 &&
+        preparedReviews.length === 0 &&
+        !isReviewsLoadingError && <NotFoundReviews />}
     </>
   );
 };
