@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRegistrationForm } from "../../../hooks/use-registration-form";
 import styles from "./registration-form.module.css";
+import clsx from "clsx";
+import FormField from "../../../components/form-field/form-field";
 
 const RegistrationForm = () => {
   const {
@@ -30,107 +32,66 @@ const RegistrationForm = () => {
     };
   }, [values.avatar, errors.avatar]);
 
-  const getFieldClassName = (field: keyof typeof values): string => {
-    if (!touched[field]) {
-      return "custom-input register-page__field";
-    }
-
-    return [
-      "custom-input",
-      "register-page__field",
-      errors[field] ? "is-invalid" : "is-valid",
-    ].join(" ");
-  };
-
   return (
     <div className="register-page__form">
-      <form
-        action="#"
-        method="post"
-        autoComplete="off"
-        onSubmit={handleSubmit}
-        noValidate
-      >
+      <form autoComplete="off" onSubmit={handleSubmit} noValidate>
         <div className="register-page__fields">
-          <div className={`${getFieldClassName("name")} ${styles.field}`}>
-            <label>
-              <span className="custom-input__label">Введите ваше имя</span>
+          <FormField
+            name="name"
+            label="Введите ваше имя"
+            placeholder="Имя"
+            type="text"
+            value={values.name}
+            error={errors.name}
+            touched={Boolean(touched.name)}
+            disabled={isSubmitting}
+            className="register-page__field custom-input"
+            autoComplete="name"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
 
-              <input
-                type="text"
-                name="name"
-                placeholder="Имя"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={isSubmitting}
-                aria-invalid={Boolean(errors.name)}
-                aria-describedby={
-                  errors.name ? "registration-name-error" : undefined
-                }
-              />
-            </label>
+          <FormField
+            name="email"
+            label="Введите вашу почту"
+            placeholder="Почта"
+            type="email"
+            value={values.email}
+            error={errors.email}
+            touched={Boolean(touched.email)}
+            disabled={isSubmitting}
+            className="register-page__field custom-input"
+            autoComplete="email"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
 
-            {errors.name && (
-              <span id="registration-name-error" className={styles.error}>
-                {errors.name}
-              </span>
+          <FormField
+            name="password"
+            label="Введите ваш пароль"
+            placeholder="Пароль"
+            type="password"
+            value={values.password}
+            error={errors.password}
+            touched={Boolean(touched.password)}
+            disabled={isSubmitting}
+            className="register-page__field custom-input"
+            autoComplete="new-password"
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+
+          <div
+            className={clsx(
+              "custom-input",
+              "register-page__field",
+              styles.field,
+              {
+                "is-invalid": touched.avatar && errors.avatar,
+                "is-valid": touched.avatar && !errors.avatar,
+              },
             )}
-          </div>
-
-          <div className={`${getFieldClassName("email")} ${styles.field}`}>
-            <label>
-              <span className="custom-input__label">Введите вашу почту</span>
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Почта"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={isSubmitting}
-                aria-invalid={Boolean(errors.email)}
-                aria-describedby={
-                  errors.email ? "registration-email-error" : undefined
-                }
-              />
-            </label>
-
-            {errors.email && (
-              <span id="registration-email-error" className={styles.error}>
-                {errors.email}
-              </span>
-            )}
-          </div>
-
-          <div className={`${getFieldClassName("password")} ${styles.field}`}>
-            <label>
-              <span className="custom-input__label">Введите ваш пароль</span>
-
-              <input
-                type="password"
-                name="password"
-                placeholder="Пароль"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                disabled={isSubmitting}
-                aria-invalid={Boolean(errors.password)}
-                aria-describedby={
-                  errors.password ? "registration-password-error" : undefined
-                }
-              />
-            </label>
-
-            {errors.password && (
-              <span id="registration-password-error" className={styles.error}>
-                {errors.password}
-              </span>
-            )}
-          </div>
-
-          <div className={`${getFieldClassName("avatar")} ${styles.field}`}>
+          >
             <label>
               <span className="custom-input__label">Выберите изображение</span>
 

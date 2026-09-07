@@ -56,11 +56,6 @@ export const useRegistrationForm = () => {
       [fieldName]: nextValue,
     }));
 
-    setTouched((current) => ({
-      ...current,
-      [fieldName]: true,
-    }));
-
     if (fieldName === "name") {
       const error = validateName(value);
 

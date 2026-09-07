@@ -2,6 +2,15 @@
   position: relative;
 }
 
+.error {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  font-size: 12px;
+  line-height: 16px;
+  color: #3a1919;
+}
 
 .avatarPreview {
   position: absolute;
@@ -12,16 +21,4 @@
   border-radius: 50%;
   object-fit: cover;
   transform: translateY(-50%);
-}
-
-.error {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  width: 100%;
-
-  font-size: 12px;
-  line-height: 16px;
-
-  color: #3a1919;
 }
