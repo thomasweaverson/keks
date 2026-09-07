@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../const/infrastructure";
-import RegistrationForm from "../../components/registration-form/registration-form";
+import RegistrationForm from "./registration-form/registration-form";
 import { Helmet } from "react-helmet-async";
 
 const RegistrationPage = () => {

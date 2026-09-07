@@ -2,8 +2,12 @@ import {
   MAX_AVATAR_HEIGHT,
   MAX_AVATAR_SIZE,
   MAX_AVATAR_WIDTH,
-} from "../../const/business";
-import { EMAIL_REGEXP, NAME_REGEXP, PASSWORD_REGEXP } from "../../const/regexp";
+} from "../../../const/business";
+import {
+  EMAIL_REGEXP,
+  NAME_REGEXP,
+  PASSWORD_REGEXP,
+} from "../../../const/regexp";
 import type { RegistrationErrors, RegistrationFormValues } from "./types";
 
 const AVATAR_TYPES = ["image/jpeg", "image/png"];
@@ -97,7 +101,7 @@ export const validateAvatar = async (
 };
 
 export const validateForm = async (
-  values: RegistrationFormValues
+  values: RegistrationFormValues,
 ): Promise<RegistrationErrors> => {
   const errors: RegistrationErrors = {};
 

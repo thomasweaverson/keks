@@ -2,16 +2,12 @@ import clsx from "clsx";
 import type { TProductExtended } from "../../../types/product";
 import { formatValue } from "../../../utils/common";
 import StarRating from "../../../components/star-rating/star-rating";
-import { useState, type MouseEvent } from "react";
-import { DESCRIPTION_LENGTH } from "../../../const/business";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import {
-  removeFromFavoritesAction,
-  setIsFavoriteAction,
-} from "../../../store/api-actions";
+import { useAppSelector } from "../../../hooks";
 import { getAuthorizationStatus } from "../../../store/slices/user/user.selectors";
 import { AppRoute, AuthorizationStatus } from "../../../const/infrastructure";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useExpandableDescription from "../../../hooks/useExpandableDescription";
+import useFavorite from "../../../hooks/useFavorite";
 
 type TDetailsProps = {
   product: TProductExtended;
@@ -24,11 +20,10 @@ const Details = ({
   onShowReviewFormClick,
   isReviewFormOpen,
 }: TDetailsProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const dispatch = useAppDispatch();
-  const userAuthorizationStatus = useAppSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isAuthorized = authorizationStatus !== AuthorizationStatus.Auth;
   const navigate = useNavigate();
-  const [isFavoritePending, setIsFavoritePending] = useState(false);
+  const location = useLocation();
 
   const {
     id,
@@ -45,42 +40,23 @@ const Details = ({
     previewImageWebp,
   } = product;
 
-  const handleFavoriteClick = async (evt: MouseEvent) => {
-    evt.preventDefault();
-    if (isFavoritePending) {
-      return;
-    }
+  const { isPending: isFavoritePending, toggleFavorite } = useFavorite(
+    id,
+    isFavorite,
+    location,
+  );
 
-    if (userAuthorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
-      return;
-    }
-
-    setIsFavoritePending(true);
-
-    try {
-      await dispatch(
-        isFavorite ? removeFromFavoritesAction(id) : setIsFavoriteAction(id),
-      ).unwrap();
-    } finally {
-      setIsFavoritePending(false);
-    }
-  };
+  const { visibleDescription, isLongDescription, expand, isExpanded } =
+    useExpandableDescription(description);
 
   const handleShowFormClick = () => {
-    if (userAuthorizationStatus !== AuthorizationStatus.Auth) {
+    if (isAuthorized) {
       navigate(AppRoute.Login);
-    } else {
-      onShowReviewFormClick(!isReviewFormOpen);
+      return;
     }
+
+    onShowReviewFormClick(!isReviewFormOpen);
   };
-
-  const isLongDescription = description.length > DESCRIPTION_LENGTH;
-
-  const visibleDescription =
-    isLongDescription && !isExpanded
-      ? description.slice(0, DESCRIPTION_LENGTH)
-      : description;
 
   return (
     <section
@@ -124,7 +100,7 @@ const Details = ({
                   <button
                     className="item-details__more"
                     type="button"
-                    onClick={() => setIsExpanded(true)}
+                    onClick={expand}
                   >
                     <span className="visually-hidden">Читать полностью</span>
 
@@ -140,7 +116,7 @@ const Details = ({
                   className={clsx("item-details__like-button", {
                     "item-details__like-button--active": isFavorite,
                   })}
-                  onClick={handleFavoriteClick}
+                  onClick={toggleFavorite}
                   aria-disabled={isFavoritePending}
                 >
                   <svg width="45" height="37" aria-hidden="true">

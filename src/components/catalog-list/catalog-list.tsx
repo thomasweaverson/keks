@@ -8,7 +8,7 @@ type TCatalogListProps = {
 const CatalogList = ({ products }: TCatalogListProps) => (
   <ul className="catalog__list">
     {products.map((product) => (
-      <li className="catalog__item">
+      <li className="catalog__item" key={product.id}>
         <Card product={product} isFull />
       </li>
     ))}

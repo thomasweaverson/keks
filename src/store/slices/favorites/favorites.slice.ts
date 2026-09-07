@@ -10,30 +10,35 @@ import {
 
 const initialState: TFavoritesState = {
   favorites: [],
-  isFavoritesLoading: false,
+  isFavoritesLoadingError: false,
 };
 
 export const favoritesSlice = createSlice({
   name: NameSpace.Favorites,
   initialState,
   reducers: {
-    resetFavorites: () => initialState
+    resetFavorites: () => initialState,
   },
   extraReducers(builder) {
     builder
       .addCase(fetchFavoritesAction.pending, (state) => {
-        state.isFavoritesLoading = true;
+        state.isFavoritesLoadingError = false;
       })
       .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
-        state.isFavoritesLoading = false;
+        state.isFavoritesLoadingError = false;
         state.favorites = action.payload;
       })
       .addCase(fetchFavoritesAction.rejected, (state) => {
-        state.isFavoritesLoading = false;
-        state.favorites = [];
+        state.isFavoritesLoadingError = true;
       })
       .addCase(setIsFavoriteAction.fulfilled, (state, action) => {
-        state.favorites.push(action.payload);
+        const isAlreadyFavorite = state.favorites.some(
+          (product) => product.id === action.payload.id,
+        );
+
+        if (!isAlreadyFavorite) {
+          state.favorites.push(action.payload);
+        }
       })
       .addCase(removeFromFavoritesAction.fulfilled, (state, action) => {
         state.favorites = state.favorites.filter(

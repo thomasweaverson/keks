@@ -1,24 +1,24 @@
-import {
-  ReviewsFilter,
-  SortOrder,
-} from "../../../const/business";
-import type { TReviewsFilter, TReviewsSortOrder } from "../../../types/business";
+import { HIGH_LEVEL_RATING_THRESHOLD, ReviewsFilter, SortOrder } from "../../../const/business";
+import type {
+  TReviewsFilter,
+  TReviewsSortOrder,
+} from "../../../types/business";
 import type { TReview } from "../../../types/product";
-
 
 export const filterReviews = (
   reviews: TReview[],
   filter: TReviewsFilter,
 ): TReview[] => {
-  if (filter === ReviewsFilter.Any) {
-    return reviews;
-  }
+  switch (filter) {
+    case ReviewsFilter.Any:
+      return reviews;
 
-  if (filter === ReviewsFilter.High) {
-    return reviews.filter((review) => review.rating >= 4);
-  }
+    case ReviewsFilter.High:
+      return reviews.filter((review) => review.rating >= HIGH_LEVEL_RATING_THRESHOLD);
 
-  return reviews.filter((review) => review.rating <= 3);
+    case ReviewsFilter.Low:
+      return reviews.filter((review) => review.rating < HIGH_LEVEL_RATING_THRESHOLD);
+  }
 };
 
 export const sortReviews = (
@@ -29,8 +29,6 @@ export const sortReviews = (
     const dateA = new Date(a.isoDate).getTime();
     const dateB = new Date(b.isoDate).getTime();
 
-    return sortOrder === SortOrder.NEWEST
-      ? dateB - dateA
-      : dateA - dateB;
+    return sortOrder === SortOrder.NEWEST ? dateB - dateA : dateA - dateB;
   });
 };

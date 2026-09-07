@@ -1,34 +1,36 @@
 import { useEffect, useState } from "react";
-import { REVIEWS_PER_STEP } from "../../../const/business";
-import { useAppSelector } from "../../../hooks";
+import { REVIEWS_PER_STEP } from "../../../../const/business";
+import { useAppSelector } from "../../../../hooks";
 import {
   getCurrentReviewsFilter,
   getCurrentReviewsSortOrder,
-} from "../../../store/slices/reviews/reviews.selectors";
-import ReviewCard from "../../../components/review-card/review-card";
+  getFilteredAndSortedReviews,
+} from "../../../../store/slices/reviews/reviews.selectors";
 import ShowMoreCommentsButton from "./show-more-comments-button/show-more-comments-button";
-import type { TReview } from "../../../types/product";
+import ReviewCard from "../../../../components/review-card/review-card";
 
-type TReviewsListProps = {
-  reviews: TReview[];
-};
-
-const ReviewsList = ({ reviews }: TReviewsListProps) => {
+const ReviewsList = () => {
+  const reviews = useAppSelector(getFilteredAndSortedReviews);
   const currentFilter = useAppSelector(getCurrentReviewsFilter);
   const currentSortOrder = useAppSelector(getCurrentReviewsSortOrder);
-  const [visibleCount, setVisibleCount] = useState(REVIEWS_PER_STEP);
+  const [visibleReviewsCount, setVisibleReviewsCount] =
+    useState(REVIEWS_PER_STEP);
 
   useEffect(() => {
-    setVisibleCount(REVIEWS_PER_STEP);
+    setVisibleReviewsCount(REVIEWS_PER_STEP);
   }, [currentFilter, currentSortOrder]);
 
-  const visibleReviews = reviews.slice(0, visibleCount);
+  const visibleReviews = reviews.slice(0, visibleReviewsCount);
 
-  const shouldRenderShowMoreButton = visibleCount < reviews.length;
+  const shouldRenderShowMoreButton = visibleReviewsCount < reviews.length;
 
   const handleShowMore = () => {
-    setVisibleCount((count) => count + REVIEWS_PER_STEP);
+    setVisibleReviewsCount((count) => count + REVIEWS_PER_STEP);
   };
+
+  if (reviews.length === 0) {
+    return null;
+  }
 
   return (
     <section className="comments">
@@ -36,7 +38,7 @@ const ReviewsList = ({ reviews }: TReviewsListProps) => {
       <div className="container">
         <div className="comments__wrapper">
           {visibleReviews.map((review) => (
-            <ReviewCard review={review} />
+            <ReviewCard key={review.id} review={review} />
           ))}
         </div>
         {shouldRenderShowMoreButton && (

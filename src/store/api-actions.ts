@@ -31,18 +31,22 @@ export const fetchProductAction = createAppAsyncThunk<TProductExtended, string>(
     const { api } = extra;
     const { data } = await api.get<TProductExtended>(
       `${APIRoute.Products}/${id}`,
+      {
+        skipToast: true,
+      },
     );
     return data;
   },
 );
 
-export const fetchFiltersAction = createAppAsyncThunk<
-  TCategoryWithTypes[]
->("data/fetchFilters", async (_arg, { extra }) => {
-  const { api } = extra;
-  const { data } = await api.get<TCategoryWithTypes[]>(APIRoute.Categories);
-  return data;
-});
+export const fetchFiltersAction = createAppAsyncThunk<TCategoryWithTypes[]>(
+  "data/fetchFilters",
+  async (_arg, { extra }) => {
+    const { api } = extra;
+    const { data } = await api.get<TCategoryWithTypes[]>(APIRoute.Categories);
+    return data;
+  },
+);
 
 export const fetchFavoritesAction = createAppAsyncThunk<TProductExtended[]>(
   "favorites/fetchAll",
@@ -53,27 +57,27 @@ export const fetchFavoritesAction = createAppAsyncThunk<TProductExtended[]>(
   },
 );
 
-export const setIsFavoriteAction = createAppAsyncThunk<TProductExtended, string>(
-  "favorites/addToFavorites",
-  async (id, { extra }) => {
-    const { api } = extra;
-    const { data } = await api.put<TProductExtended>(
-      `${APIRoute.Favorites}/${id}`,
-    );
-    return data;
-  },
-);
+export const setIsFavoriteAction = createAppAsyncThunk<
+  TProductExtended,
+  string
+>("favorites/addToFavorites", async (id, { extra }) => {
+  const { api } = extra;
+  const { data } = await api.put<TProductExtended>(
+    `${APIRoute.Favorites}/${id}`,
+  );
+  return data;
+});
 
-export const removeFromFavoritesAction = createAppAsyncThunk<TProductExtended, string>(
-  "favorites/removeFromFavorites",
-  async (id, { extra }) => {
-    const { api } = extra;
-    const { data } = await api.delete<TProductExtended>(
-      `${APIRoute.Favorites}/${id}`,
-    );
-    return data;
-  },
-);
+export const removeFromFavoritesAction = createAppAsyncThunk<
+  TProductExtended,
+  string
+>("favorites/removeFromFavorites", async (id, { extra }) => {
+  const { api } = extra;
+  const { data } = await api.delete<TProductExtended>(
+    `${APIRoute.Favorites}/${id}`,
+  );
+  return data;
+});
 
 export const clearAllFavoritesAction = createAppAsyncThunk<void>(
   "favorites/clearAll",
@@ -91,14 +95,16 @@ export const clearAllFavoritesAction = createAppAsyncThunk<void>(
   },
 );
 
-export const fetchReviewsAction = createAppAsyncThunk<TReview[], TProduct["id"]>(
-  "reviews/fetchAll",
-  async (id, { extra }) => {
-    const { api } = extra;
-    const { data } = await api.get<TReview[]>(`${APIRoute.Reviews}/${id}`);
-    return data;
-  },
-);
+export const fetchReviewsAction = createAppAsyncThunk<
+  TReview[],
+  TProduct["id"]
+>("reviews/fetchAll", async (id, { extra }) => {
+  const { api } = extra;
+  const { data } = await api.get<TReview[]>(`${APIRoute.Reviews}/${id}`, {
+    skipToast: true,
+  });
+  return data;
+});
 
 export const postReviewAction = createAppAsyncThunk<TReview, TReviewPosting>(
   "reviews/postReview",

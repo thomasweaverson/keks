@@ -1,5 +1,5 @@
-import { useAppDispatch } from "../../../hooks";
-import { resetFiltersAndSorting } from "../../../store/slices/reviews/reviews.slice";
+import { useAppDispatch } from "../../../../hooks";
+import { resetFiltersAndSorting } from "../../../../store/slices/reviews/reviews.slice";
 
 const NotFoundReviews = () => {
   const dispatch = useAppDispatch();

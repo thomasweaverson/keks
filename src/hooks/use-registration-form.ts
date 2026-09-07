@@ -7,7 +7,7 @@ import {
 import type {
   RegistrationErrors,
   RegistrationFormValues,
-} from "../components/registration-form/types";
+} from "../pages/registration-page/registration-form/types";
 import { useAppDispatch } from ".";
 import {
   validateAvatar,
@@ -15,7 +15,7 @@ import {
   validateForm,
   validateName,
   validatePassword,
-} from "../components/registration-form/utils";
+} from "../pages/registration-page/registration-form/utils";
 import { registerUserAction } from "../store/api-actions";
 import { toast } from "react-toastify";
 

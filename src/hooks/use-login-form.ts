@@ -4,10 +4,10 @@ import {
   type ChangeEvent,
   type SubmitEvent,
 } from 'react';
-import type { LoginFormErrors, LoginFormValues } from '../components/login-form/types';
 import { useAppDispatch } from '.';
-import { validateEmail, validateForm, validatePassword } from '../components/login-form/utils';
 import { authorizeUserAction } from '../store/api-actions';
+import type { LoginFormErrors, LoginFormValues } from '../pages/login-page/login-form/types';
+import { validateEmail, validateForm, validatePassword } from '../pages/login-page/login-form/utils';
 
 
 const INITIAL_VALUES: LoginFormValues = {

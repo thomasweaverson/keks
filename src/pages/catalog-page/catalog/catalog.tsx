@@ -5,8 +5,9 @@ import CatalogList from "../../../components/catalog-list/catalog-list";
 import { useAppSelector } from "../../../hooks";
 import {
   getCurrentCategory,
-  getCurrentTypes,
+  getSelectedTypes,
 } from "../../../store/slices/filter/filter.selectors";
+import { handleScrollToTop } from "../../../utils/common";
 
 type TCatalogProps = {
   filteredProducts: TProduct[];
@@ -14,30 +15,24 @@ type TCatalogProps = {
 
 const Catalog = ({ filteredProducts }: TCatalogProps) => {
   const currentCategory = useAppSelector(getCurrentCategory);
-  const currentTypes = useAppSelector(getCurrentTypes);
+  const selectedTypes = useAppSelector(getSelectedTypes);
 
   const [visibleCount, setVisibleCount] = useState(CATALOG_CARDS_PER_STEP);
 
   useEffect(() => {
     setVisibleCount(CATALOG_CARDS_PER_STEP);
-  }, [currentCategory, currentTypes]);
+  }, [currentCategory, selectedTypes]);
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
-  const shouldRenderShowMoreButton = visibleCount < filteredProducts.length;
+  const hasMoreProducts = visibleCount < filteredProducts.length;
   const shouldRenderToBeginButton =
-    !shouldRenderShowMoreButton &&
-    filteredProducts.length > CATALOG_CARDS_PER_STEP;
+    !hasMoreProducts && filteredProducts.length > CATALOG_CARDS_PER_STEP;
 
   const handleShowMore = () => {
-    setVisibleCount((count) => count + CATALOG_CARDS_PER_STEP);
-  };
-
-  const handleScrollToTop = (): void => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    setVisibleCount((count) =>
+      Math.min(count + CATALOG_CARDS_PER_STEP, filteredProducts.length),
+    );
   };
 
   return (
@@ -46,7 +41,7 @@ const Catalog = ({ filteredProducts }: TCatalogProps) => {
       <div className="catalog__wrapper">
         <CatalogList products={visibleProducts} />
         <div className="catalog__button-wrapper">
-          {shouldRenderShowMoreButton && (
+          {hasMoreProducts && (
             <button
               className="btn btn--second"
               type="button"

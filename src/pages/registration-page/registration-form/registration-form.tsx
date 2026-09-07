@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRegistrationForm } from "../../hooks/use-registration-form";
+import { useRegistrationForm } from "../../../hooks/use-registration-form";
 import styles from "./registration-form.module.css";
 
 const RegistrationForm = () => {

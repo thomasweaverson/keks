@@ -1,8 +1,6 @@
-export const pluralize = (
+export const getRussianPlural = (
   count: number,
-  one: string,
-  few: string,
-  many: string
+  [one, few, many]: [string, string, string],
 ): string => {
   const mod100 = count % 100;
   const mod10 = count % 10;

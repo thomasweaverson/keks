@@ -1,6 +1,5 @@
-import { useLoginForm } from '../../hooks/use-login-form';
-import styles from './login-form.module.css';
-
+import { useLoginForm } from "../../../hooks/use-login-form";
+import styles from "./login-form.module.css";
 
 const LoginForm = () => {
   const {
@@ -13,24 +12,14 @@ const LoginForm = () => {
     handleSubmit,
   } = useLoginForm();
 
-  const getFieldClassName = (
-    field: keyof typeof values
-  ): string => {
-    const classes = [
-      'custom-input',
-      'login-page__field',
-      styles.field,
-    ];
+  const getFieldClassName = (field: keyof typeof values): string => {
+    const classes = ["custom-input", "login-page__field", styles.field];
 
     if (touched[field]) {
-      classes.push(
-        errors[field]
-          ? 'is-invalid'
-          : 'is-valid'
-      );
+      classes.push(errors[field] ? "is-invalid" : "is-valid");
     }
 
-    return classes.join(' ');
+    return classes.join(" ");
   };
 
   return (
@@ -43,11 +32,9 @@ const LoginForm = () => {
         noValidate
       >
         <div className="login-page__fields">
-          <div className={getFieldClassName('email')}>
+          <div className={getFieldClassName("email")}>
             <label>
-              <span className="custom-input__label">
-                Введите вашу почту
-              </span>
+              <span className="custom-input__label">Введите вашу почту</span>
 
               <input
                 type="email"
@@ -59,29 +46,22 @@ const LoginForm = () => {
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.email)}
                 aria-describedby={
-                  errors.email
-                    ? 'login-email-error'
-                    : undefined
+                  errors.email ? "login-email-error" : undefined
                 }
                 required
               />
             </label>
 
             {errors.email && (
-              <span
-                id="login-email-error"
-                className={styles.error}
-              >
+              <span id="login-email-error" className={styles.error}>
                 {errors.email}
               </span>
             )}
           </div>
 
-          <div className={getFieldClassName('password')}>
+          <div className={getFieldClassName("password")}>
             <label>
-              <span className="custom-input__label">
-                Введите ваш пароль
-              </span>
+              <span className="custom-input__label">Введите ваш пароль</span>
 
               <input
                 type="password"
@@ -93,19 +73,14 @@ const LoginForm = () => {
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.password)}
                 aria-describedby={
-                  errors.password
-                    ? 'login-password-error'
-                    : undefined
+                  errors.password ? "login-password-error" : undefined
                 }
                 required
               />
             </label>
 
             {errors.password && (
-              <span
-                id="login-password-error"
-                className={styles.error}
-              >
+              <span id="login-password-error" className={styles.error}>
                 {errors.password}
               </span>
             )}
@@ -117,7 +92,7 @@ const LoginForm = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Вход...' : 'Войти'}
+          {isSubmitting ? "Вход..." : "Войти"}
         </button>
       </form>
     </div>

@@ -8,6 +8,7 @@ const initialState: TFilterState = {
   filters: [],
   currentCategory: null,
   currentTypes: [],
+  isFiltersLoading: false,
   isFiltersLoadingError: false,
 };
 
@@ -38,11 +39,17 @@ export const filterSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(fetchFiltersAction.pending, (state) => {
+        ((state.isFiltersLoading = true),
+          (state.isFiltersLoadingError = false));
+      })
       .addCase(fetchFiltersAction.fulfilled, (state, action) => {
+        state.isFiltersLoading = false;
         state.filters = action.payload;
         state.isFiltersLoadingError = false;
       })
       .addCase(fetchFiltersAction.rejected, (state) => {
+        state.isFiltersLoading = false;
         state.isFiltersLoadingError = true;
       });
   },

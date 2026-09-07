@@ -47,6 +47,7 @@ export type TProductState = {
   product: null | TProductExtended;
   isProductLoading: boolean;
   isProductLoadingError: boolean;
+  isProductNotFound: boolean;
 };
 
 export type TUserState = {
@@ -58,7 +59,7 @@ export type TUserState = {
 
 export type TFavoritesState = {
   favorites: TProductExtended[];
-  isFavoritesLoading: boolean;
+  isFavoritesLoadingError: boolean;
 };
 
 export type TReviewsState = {
@@ -75,4 +76,5 @@ export type TFilterState = {
   currentCategory: TProductCategory | null;
   currentTypes: TProductType[];
   isFiltersLoadingError: boolean;
+  isFiltersLoading: boolean;
 };

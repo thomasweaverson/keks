@@ -1,58 +1,22 @@
-import { useForm, useWatch } from "react-hook-form";
-import { useAppDispatch } from "../../../hooks";
-import { postReviewAction } from "../../../store/api-actions";
-import type { TReviewPosting } from "../../../types/product";
-import {
-  MAX_RATING,
-  MIN_RATING,
-  NEGATIVE_RATING_MAX,
-  POSITIVE_RATING_MIN,
-  REVIEW_TEXT_MAX_LENGTH,
-} from "./const";
-import ReviewTextInput from "./review-text-input/review-text-input";
-import RatingInput from "./rating-input/rating-input";
 import clsx from "clsx";
-import styles from './review-form.module.css';
+import styles from "./review-form.module.css";
+import RatingInput from "./rating-input/rating-input";
+import ReviewTextInput from "./review-text-input/review-text-input";
+import { useReviewForm } from "../../../hooks/use-review-form";
 
 type TReviewFormProps = {
   productId: string;
 };
 
 const ReviewForm = ({ productId }: TReviewFormProps) => {
-  const dispatch = useAppDispatch();
-
   const {
-    register,
+    values,
+    errors,
+    isSubmitting,
+    handleTextChange,
+    handleRatingChange,
     handleSubmit,
-    reset,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<TReviewPosting>({
-    mode: "onChange",
-    defaultValues: {
-      positive: "",
-      negative: "",
-      rating: 0,
-    },
-  });
-
-  const [rating, positive, negative] = useWatch({
-    control,
-    name: ["rating", "positive", "negative"],
-  });
-
-  const onSubmit = async (data: TReviewPosting) => {
-    await dispatch(
-      postReviewAction({
-        id: productId,
-        positive: data.positive,
-        negative: data.negative,
-        rating: Number(data.rating),
-      }),
-    ).unwrap();
-
-    reset();
-  };
+  } = useReviewForm(productId);
 
   return (
     <section className="review-form">
@@ -65,61 +29,37 @@ const ReviewForm = ({ productId }: TReviewFormProps) => {
               action="#"
               method="post"
               autoComplete="off"
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit}
             >
               <div className="review-form__inputs-wrapper">
                 <ReviewTextInput
                   label="Достоинства"
                   placeholder="Достоинства"
-                  value={positive}
+                  value={values.positive}
                   error={errors.positive}
-                  registration={register("positive", {
-                    validate: (value) =>
-                      rating >= POSITIVE_RATING_MIN && !value.trim()
-                        ? "Укажите достоинства товара"
-                        : true,
-                    maxLength: {
-                      value: REVIEW_TEXT_MAX_LENGTH,
-                      message: "Максимум 500 символов",
-                    },
-                  })}
+                  onChange={(value) => handleTextChange("positive", value)}
                 />
 
                 <ReviewTextInput
                   label="Недостатки"
                   placeholder="Недостатки"
-                  value={negative}
+                  value={values.negative}
                   error={errors.negative}
-                  registration={register("negative", {
-                    validate: (value) =>
-                      rating >= MIN_RATING &&
-                      rating <= NEGATIVE_RATING_MAX &&
-                      !value.trim()
-                        ? "Укажите недостатки товара"
-                        : true,
-                    maxLength: {
-                      value: REVIEW_TEXT_MAX_LENGTH,
-                      message: "Максимум 500 символов",
-                    },
-                  })}
+                  onChange={(value) => handleTextChange("negative", value)}
                 />
               </div>
 
               <div className="review-form__submit-wrapper">
-                <div className={clsx("review-form__rating-wrapper", styles.field)}>
+                <div
+                  className={clsx("review-form__rating-wrapper", styles.field)}
+                >
                   <RatingInput
-                    registration={register("rating", {
-                      required: "Выберите оценку",
-                      valueAsNumber: true,
-                      min: MIN_RATING,
-                      max: MAX_RATING,
-                    })}
+                    value={values.rating}
+                    onChange={handleRatingChange}
                   />
 
                   {errors.rating && (
-                    <span className={styles.error}>
-                      {errors.rating.message}
-                    </span>
+                    <span className={styles.error}>{errors.rating}</span>
                   )}
                 </div>
 

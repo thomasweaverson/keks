@@ -29,7 +29,7 @@ const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.INTERNAL_SERVER_ERROR]: true,
   [StatusCodes.BAD_GATEWAY]: true,
   [StatusCodes.SERVICE_UNAVAILABLE]: true,
-  [StatusCodes.CONFLICT]: true
+  [StatusCodes.CONFLICT]: true,
 };
 
 const shouldDisplayError = (response: AxiosResponse) =>
@@ -53,6 +53,12 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
+      console.log("INTERCEPTOR", {
+        status: error.response?.status,
+        skipToast: error.config?.skipToast,
+        url: error.config?.url,
+      });
+
       const shouldSkipToast = error.config?.skipToast;
 
       if (!shouldSkipToast) {

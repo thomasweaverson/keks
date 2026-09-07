@@ -1,4 +1,4 @@
-import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../const/regexp';
+import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../../const/regexp';
 import type {
   LoginFormErrors,
   LoginFormValues,

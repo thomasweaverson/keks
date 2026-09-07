@@ -11,3 +11,7 @@ export const getIsProductLoading = (
 export const getIsProductLoadingError = (
   state: Pick<TState, typeof NameSpace.Product>,
 ) => state[NameSpace.Product].isProductLoadingError;
+
+export const getIsProductNotFound = (
+  state: Pick<TState, typeof NameSpace.Product>,
+) => state[NameSpace.Product].isProductNotFound;

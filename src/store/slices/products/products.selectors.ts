@@ -3,12 +3,16 @@ import { NameSpace } from "../../../const/infrastructure";
 import type { TState } from "../../../types/state";
 import {
   getCurrentCategory,
-  getCurrentTypes,
+  getSelectedTypes,
 } from "../filter/filter.selectors";
 
 export const getIsProductsLoaded = (
   state: Pick<TState, typeof NameSpace.Products>,
 ) => state[NameSpace.Products].isProductsLoaded;
+
+export const getIsProductsLoading = (
+  state: Pick<TState, typeof NameSpace.Products>,
+) => state[NameSpace.Products].isProductsLoading;
 
 export const getIsProductsLoadingError = (
   state: Pick<TState, typeof NameSpace.Products>,
@@ -21,7 +25,7 @@ export const getRandomPack = (state: Pick<TState, typeof NameSpace.Products>) =>
   state[NameSpace.Products].randomPack;
 
 export const getFilteredProducts = createSelector(
-  [getProducts, getCurrentCategory, getCurrentTypes],
+  [getProducts, getCurrentCategory, getSelectedTypes],
   (products, currentCategory, currentTypes) => {
     if (!currentCategory) {
       return products;

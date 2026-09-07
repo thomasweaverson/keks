@@ -4,7 +4,7 @@ const ErrorPage = () => {
   return (
     <>
       <Helmet>
-        <title>Кондитерская Кекс - Ошибка загрузки страницы</title>{" "}
+        <title>Кондитерская Кекс - Ошибка загрузки страницы</title>
       </Helmet>
       <h1 className="visually-hidden">Ошибка загрузки страницы</h1>
       <section className="error-loading">

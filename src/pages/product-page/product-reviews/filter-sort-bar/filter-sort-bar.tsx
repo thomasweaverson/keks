@@ -1,20 +1,12 @@
-import clsx from "clsx";
-import { ReviewsFilter, SortOrder } from "../../../const/business";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import {
-  getCurrentReviewsFilter,
-  getCurrentReviewsSortOrder,
-} from "../../../store/slices/reviews/reviews.selectors";
-import {
-  setReviewsFilter,
-  setReviewsSortOrder,
-} from "../../../store/slices/reviews/reviews.slice";
-import type {
-  TReviewsFilter,
-  TReviewsSortOrder,
-} from "../../../types/business";
 
-const filtersWithLabels = Object.entries(ReviewsFilter);
+import clsx from "clsx";
+import { ReviewsFilter, SortOrder } from "../../../../const/business";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
+import { getCurrentReviewsFilter, getCurrentReviewsSortOrder } from "../../../../store/slices/reviews/reviews.selectors";
+import { setReviewsFilter, setReviewsSortOrder } from "../../../../store/slices/reviews/reviews.slice";
+import type { TReviewsFilter, TReviewsSortOrder } from "../../../../types/business";
+
+const reviewFilters: [string, TReviewsFilter][] = Object.entries(ReviewsFilter);
 
 const FilterSortBar = () => {
   const dispatch = useAppDispatch();
@@ -29,11 +21,11 @@ const FilterSortBar = () => {
     dispatch(setReviewsFilter(filter));
   };
 
-  const handleSortOrderChange = (sortType: TReviewsSortOrder) => {
-    if (currentSortOrder === sortType) {
+  const handleSortOrderChange = (sortOrder: TReviewsSortOrder) => {
+    if (currentSortOrder === sortOrder) {
       return;
     }
-    dispatch(setReviewsSortOrder(sortType));
+    dispatch(setReviewsSortOrder(sortOrder));
   };
 
   return (
@@ -55,25 +47,21 @@ const FilterSortBar = () => {
                 </svg>
               </button>
               <ul className="filter-sort__filter-list">
-                {filtersWithLabels.map((filterAndLabel) => {
-                  const filterId = filterAndLabel[0].toLowerCase();
-                  const label = filterAndLabel[1];
+                {reviewFilters .map(([filter, label]) => {
+                  const filterId = filter.toLowerCase();
                   return (
-                    <li className="filter-sort__filter-item">
+                    <li className="filter-sort__filter-item" key={filter}>
                       <div className="custom-toggle custom-toggle--sorting">
                         <input
                           type="radio"
                           id={filterId}
                           name="review-sort"
                           checked={currentFilter === label}
+                          onChange={() => handleFilterChange(label)}
                         />
                         <label
                           className="custom-toggle__label"
                           htmlFor={filterId}
-                          onClick={(evt) => {
-                            evt.preventDefault();
-                            handleFilterChange(label);
-                          }}
                         >
                           {label}
                         </label>

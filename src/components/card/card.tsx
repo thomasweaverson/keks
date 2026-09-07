@@ -1,15 +1,10 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { TProduct } from "../../types/product";
-import { AppRoute, AuthorizationStatus } from "../../const/infrastructure";
+import { AppRoute } from "../../const/infrastructure";
 import clsx from "clsx";
-import { useState, type MouseEvent } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import {
-  removeFromFavoritesAction,
-  setIsFavoriteAction,
-} from "../../store/api-actions";
+
 import { formatValue } from "../../utils/common";
-import { getAuthorizationStatus } from "../../store/slices/user/user.selectors";
+import useFavorite from "../../hooks/useFavorite";
 
 type TCardProps = {
   product: TProduct;
@@ -17,11 +12,7 @@ type TCardProps = {
 };
 
 const Card = ({ product, isFull = false }: TCardProps) => {
-  const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const location = useLocation();
-  const navigate = useNavigate();
-  const [isFavoritePending, setIsFavoritePending] = useState(false);
 
   const {
     id,
@@ -32,30 +23,14 @@ const Card = ({ product, isFull = false }: TCardProps) => {
     title,
     price,
   } = product;
+
+  const { isPending: isFavoritePending, toggleFavorite } = useFavorite(
+    id,
+    isFavorite,
+    location,
+  );
+
   const productPath = `${AppRoute.Product}/${id}`;
-
-  const handleFavoriteButtonClick = async (evt: MouseEvent) => {
-    evt.preventDefault();
-
-    if (isFavoritePending) {
-      return;
-    }
-
-    if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login, { state: { from: location } });
-      return;
-    }
-
-    setIsFavoritePending(true);
-
-    try {
-      await dispatch(
-        isFavorite ? removeFromFavoritesAction(id) : setIsFavoriteAction(id),
-      ).unwrap();
-    } finally {
-      setIsFavoritePending(false);
-    }
-  };
 
   return (
     <div className={clsx("card-item", { "card-item--big": isFull })}>
@@ -82,7 +57,7 @@ const Card = ({ product, isFull = false }: TCardProps) => {
         className={clsx("card-item__favorites", {
           "card-item__favorites--active": isFavorite,
         })}
-        onClick={handleFavoriteButtonClick}
+        onClick={toggleFavorite}
         aria-disabled={isFavoritePending}
       >
         <span className="visually-hidden">

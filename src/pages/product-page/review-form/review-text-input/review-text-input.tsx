@@ -1,14 +1,13 @@
 import clsx from "clsx";
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
 import { REVIEW_TEXT_MAX_LENGTH } from "../const";
-import styles from "./review-text-input.module.css"
+import styles from "./review-text-input.module.css";
 
 type TReviewTextInputProps = {
   label: string;
   placeholder: string;
   value: string;
-  error?: FieldError;
-  registration: UseFormRegisterReturn;
+  error?: string;
+  onChange: (value: string) => void;
 };
 
 const ReviewTextInput = ({
@@ -16,7 +15,7 @@ const ReviewTextInput = ({
   placeholder,
   value,
   error,
-  registration,
+  onChange,
 }: TReviewTextInputProps) => (
   <div
     className={clsx("custom-input", styles.field, {
@@ -31,7 +30,8 @@ const ReviewTextInput = ({
         type="text"
         placeholder={placeholder}
         maxLength={REVIEW_TEXT_MAX_LENGTH}
-        {...registration}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
       />
     </label>
 
@@ -40,9 +40,7 @@ const ReviewTextInput = ({
     </span>
 
     {error && (
-      <span className={clsx("custom-input__error", styles.error)}>
-        {error.message}
-      </span>
+      <span className={clsx("custom-input__error", styles.error)}>{error}</span>
     )}
   </div>
 );

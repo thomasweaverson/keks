@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { formatValue } from "../../../utils/common";
-import { pluralize } from "./utils";
 import { AppRoute } from "../../../const/infrastructure";
+import { getRussianPlural } from "./utils";
 
 type TSummaryProps = {
   favoritesCount: number;
@@ -16,7 +16,7 @@ const Summary = ({ favoritesCount, totalPrice }: TSummaryProps) => {
         <h2 className="visually-hidden">Количество товаров в избранном.</h2>
         <p className="number-of-favourites__cakes">
           {favoritesCount}{" "}
-          {pluralize(favoritesCount, "кекс", "кекса", "кексов")}
+          {getRussianPlural(favoritesCount, ["кекс", "кекса", "кексов"])}
         </p>
         <div className="number-of-favourites__wrapper">
           <div className="number-of-favourites__wrap-price">

@@ -2,7 +2,7 @@ import { useAppSelector } from "../../../hooks";
 import {
   getCategories,
   getCurrentCategory,
-  getCurrentTypes,
+  getSelectedTypes,
   getTypesByCurrentCategory,
 } from "../../../store/slices/filter/filter.selectors";
 import FilterFirst from "./filter-first/filter-first";
@@ -10,8 +10,8 @@ import FilterSecond from "./filter-second/filter-second";
 
 const Filter = () => {
   const currentCategory = useAppSelector(getCurrentCategory);
-  const typesByCategory = useAppSelector(getTypesByCurrentCategory);
-  const currentTypes = useAppSelector(getCurrentTypes);
+  const categoryTypes = useAppSelector(getTypesByCurrentCategory);
+  const selectedTypes = useAppSelector(getSelectedTypes);
   const categories = useAppSelector(getCategories);
 
   return (
@@ -19,7 +19,7 @@ const Filter = () => {
       <div className="container">
         <FilterFirst categories={categories} current={currentCategory} />
         {currentCategory && (
-          <FilterSecond types={typesByCategory} currentTypes={currentTypes} />
+          <FilterSecond types={categoryTypes} currentTypes={selectedTypes} />
         )}
       </div>
     </div>

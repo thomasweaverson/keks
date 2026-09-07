@@ -9,11 +9,13 @@ import {
   setIsFavoriteAction,
 } from "../../api-actions";
 import { resetFavorites } from "../favorites/favorites.slice";
+import { StatusCodes } from "http-status-codes";
 
 const initialState: TProductState = {
   product: null,
   isProductLoading: false,
   isProductLoadingError: false,
+  isProductNotFound: false,
 };
 
 export const productSlice = createSlice({
@@ -25,19 +27,28 @@ export const productSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchProductAction.pending, (state) => {
-        state.isProductLoadingError = false;
+        state.product = null;
         state.isProductLoading = true;
+        state.isProductLoadingError = false;
+        state.isProductNotFound = false;
       })
       .addCase(fetchProductAction.fulfilled, (state, action) => {
         state.isProductLoadingError = false;
         state.isProductLoading = false;
         state.product = action.payload;
       })
-      .addCase(fetchProductAction.rejected, (state) => {
-        console.log('fetchProductAction.rejected')
-        state.isProductLoadingError = true;
+      .addCase(fetchProductAction.rejected, (state, action) => {
         state.isProductLoading = false;
         state.product = null;
+
+        if (action.payload?.status === StatusCodes.NOT_FOUND) {
+          state.isProductNotFound = true;
+          state.isProductLoadingError = false;
+          return;
+        }
+
+        state.isProductNotFound = false;
+        state.isProductLoadingError = true;
       })
       .addCase(setIsFavoriteAction.fulfilled, (state, action) => {
         if (state.product && state.product.id === action.payload.id) {

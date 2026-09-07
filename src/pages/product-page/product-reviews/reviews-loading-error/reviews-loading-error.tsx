@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { fetchReviewsAction } from "../../../store/api-actions";
-import { getIsReviewsLoading } from "../../../store/slices/reviews/reviews.selectors";
 import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
+import { getIsReviewsLoading } from "../../../../store/slices/reviews/reviews.selectors";
+import { fetchReviewsAction } from "../../../../store/api-actions";
 
 const ReviewsLoadingError = () => {
   const { id } = useParams<{ id: string }>();
