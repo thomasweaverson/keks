@@ -1,6 +1,6 @@
-import clsx from "clsx";
-import { REVIEW_TEXT_MAX_LENGTH } from "../const";
-import styles from "./review-text-input.module.css";
+import clsx from 'clsx';
+import { REVIEW_TEXT_MAX_LENGTH } from '../const';
+import styles from './review-text-input.module.css';
 
 type TReviewTextInputProps = {
   label: string;
@@ -18,9 +18,9 @@ const ReviewTextInput = ({
   onChange,
 }: TReviewTextInputProps) => (
   <div
-    className={clsx("custom-input", styles.field, {
-      "is-valid": !error && Boolean(value),
-      "is-invalid": Boolean(error),
+    className={clsx('custom-input', styles.field, {
+      'is-valid': !error && Boolean(value),
+      'is-invalid': Boolean(error),
     })}
   >
     <label>
@@ -40,7 +40,7 @@ const ReviewTextInput = ({
     </span>
 
     {error && (
-      <span className={clsx("custom-input__error", styles.error)}>{error}</span>
+      <span className={clsx('custom-input__error', styles.error)}>{error}</span>
     )}
   </div>
 );

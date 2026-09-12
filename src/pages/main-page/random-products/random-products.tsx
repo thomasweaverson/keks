@@ -1,17 +1,19 @@
-import { Link, useLocation } from "react-router-dom";
-import type { TProduct } from "../../types/product";
-import Card from "../card/card";
-import { AppRoute } from "../../const/infrastructure";
+import { Link, useLocation } from 'react-router-dom';
+import type { TProduct } from '../../../types/product';
+import Card from '../../../components/card/card';
+import { AppRoute } from '../../../const/infrastructure';
+import { getLocationState } from '../../../utils/common';
 
 type TRandomProductsProps = {
   products: [TProduct, TProduct, TProduct] | null;
 };
-const WidgetRandomProducts = ({ products }: TRandomProductsProps) => {
+const RandomProducts = ({ products }: TRandomProductsProps) => {
+  const location = useLocation();
+
   if (!products) {
     return null;
   }
-  const location = useLocation();
-  
+
   return (
     <section className="random-main">
       <div className="container">
@@ -27,12 +29,12 @@ const WidgetRandomProducts = ({ products }: TRandomProductsProps) => {
             <Link
               className="random-main__link"
               to={AppRoute.Catalog}
-              state={{ from: location }}
+              state={{ from: getLocationState(location) }}
             >
               <div className="random-main__icon-wrapper">
                 <div className="random-main__icon">
                   <svg width="120" height="130" aria-hidden="true">
-                    <use href="#icon-keks"></use>
+                    <use href="#icon-keks" />
                   </svg>
                 </div>
               </div>
@@ -45,4 +47,4 @@ const WidgetRandomProducts = ({ products }: TRandomProductsProps) => {
   );
 };
 
-export default WidgetRandomProducts;
+export default RandomProducts;

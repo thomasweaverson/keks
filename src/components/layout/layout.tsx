@@ -1,7 +1,7 @@
-import { Outlet, useMatches } from "react-router-dom";
-import type { TRouteHandle } from "../../types/infrastructure";
-import Header from "../header/header";
-import Footer from "../footer/footer";
+import { Outlet, ScrollRestoration, useMatches } from 'react-router-dom';
+import type { TRouteHandle } from '../../types/infrastructure';
+import Header from './header/header';
+import Footer from './footer/footer';
 
 const Layout = () => {
   const matches = useMatches();
@@ -14,11 +14,12 @@ const Layout = () => {
 
   return (
     <>
-      {!hideHeader && <Header />}{" "}
+      {!hideHeader && <Header />}
       <main>
         <Outlet />
       </main>
-      {!hideFooter && <Footer />}{" "}
+      {!hideFooter && <Footer />}
+      <ScrollRestoration />
     </>
   );
 };

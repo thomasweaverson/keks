@@ -1,5 +1,5 @@
-import clsx from "clsx";
-import { RATING_STARS_COUNT } from "../../const/business";
+import clsx from 'clsx';
+import { RATING_STARS_COUNT } from '../../const/business';
 
 type TStarRatingProps = {
   rating: number;
@@ -12,18 +12,23 @@ const StarRating = ({
   isBig = false,
   reviewCount,
 }: TStarRatingProps) => {
-  const normalizedRating = Math.round(rating)
+  const normalizedRating = Math.min(
+    RATING_STARS_COUNT,
+    Math.max(0, Math.round(rating)),
+  );
+
   return (
     <div
-      className={clsx("star-rating", {
-        "star-rating--big": isBig,
+      className={clsx('star-rating', {
+        'star-rating--big': isBig,
       })}
+      aria-label={`Рейтинг ${normalizedRating} из ${RATING_STARS_COUNT}`}
     >
       {Array.from({ length: RATING_STARS_COUNT }, (_, index) => (
         <svg
           key={index}
-          className={clsx("star-rating__star", {
-            "star-rating__star--active": index < normalizedRating,
+          className={clsx('star-rating__star', {
+            'star-rating__star--active': index < normalizedRating,
           })}
           width="30"
           height="30"
@@ -33,7 +38,9 @@ const StarRating = ({
         </svg>
       ))}
 
-      {reviewCount && <span className="star-rating__count">{reviewCount}</span>}
+      {reviewCount !== undefined && (
+        <span className="star-rating__count">{reviewCount}</span>
+      )}
     </div>
   );
 };

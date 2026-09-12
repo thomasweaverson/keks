@@ -1,22 +1,14 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { NameSpace } from "../../../const/infrastructure";
-import type { TState } from "../../../types/state";
+import { createSelector } from '@reduxjs/toolkit';
+import { NameSpace } from '../../../const/infrastructure';
+import type { TState } from '../../../types/state';
 import {
   getCurrentCategory,
   getSelectedTypes,
-} from "../filter/filter.selectors";
+} from '../filter/filter.selectors';
 
-export const getIsProductsLoaded = (
+export const getProductsLoadingStatus = (
   state: Pick<TState, typeof NameSpace.Products>,
-) => state[NameSpace.Products].isProductsLoaded;
-
-export const getIsProductsLoading = (
-  state: Pick<TState, typeof NameSpace.Products>,
-) => state[NameSpace.Products].isProductsLoading;
-
-export const getIsProductsLoadingError = (
-  state: Pick<TState, typeof NameSpace.Products>,
-) => state[NameSpace.Products].isProductsLoadingError;
+) => state[NameSpace.Products].productsLoadingStatus;
 
 export const getProducts = (state: Pick<TState, typeof NameSpace.Products>) =>
   state[NameSpace.Products].products;

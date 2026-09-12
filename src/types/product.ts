@@ -1,6 +1,10 @@
-import type { TUser } from "./user";
+import type { TUser } from './user';
 
-export type TProductCategory = "cheesecake" | "bisque" | "shortbread" | "dessert";
+export type TProductCategory =
+  | 'cheesecake'
+  | 'bisque'
+  | 'shortbread'
+  | 'dessert';
 
 export type TProductType = string;
 
@@ -36,7 +40,7 @@ export type TReview = {
   positive: string;
   negative: string;
   rating: number;
-}
+};
 
 export type TReviewPosting = {
   id: TProduct['id'];

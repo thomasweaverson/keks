@@ -1,13 +1,13 @@
-import clsx from "clsx";
-import type { TProductExtended } from "../../../types/product";
-import { formatValue } from "../../../utils/common";
-import StarRating from "../../../components/star-rating/star-rating";
-import { useAppSelector } from "../../../hooks";
-import { getAuthorizationStatus } from "../../../store/slices/user/user.selectors";
-import { AppRoute, AuthorizationStatus } from "../../../const/infrastructure";
-import { useLocation, useNavigate } from "react-router-dom";
-import useExpandableDescription from "../../../hooks/useExpandableDescription";
-import useFavorite from "../../../hooks/useFavorite";
+import clsx from 'clsx';
+import type { TProductExtended } from '../../../types/product';
+import { formatValue } from '../../../utils/common';
+import StarRating from '../../../components/star-rating/star-rating';
+import { useAppSelector } from '../../../hooks';
+import { getAuthorizationStatus } from '../../../store/slices/user/user.selectors';
+import { AppRoute, AuthorizationStatus } from '../../../const/infrastructure';
+import { useNavigate } from 'react-router-dom';
+import useExpandableDescription from '../../../hooks/use-expandable-description';
+import useFavorite from '../../../hooks/use-favorite';
 
 type TDetailsProps = {
   product: TProductExtended;
@@ -21,9 +21,8 @@ const Details = ({
   isReviewFormOpen,
 }: TDetailsProps) => {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const isAuthorized = authorizationStatus !== AuthorizationStatus.Auth;
+  const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;
   const navigate = useNavigate();
-  const location = useLocation();
 
   const {
     id,
@@ -43,15 +42,14 @@ const Details = ({
   const { isPending: isFavoritePending, toggleFavorite } = useFavorite(
     id,
     isFavorite,
-    location,
   );
 
   const { visibleDescription, isLongDescription, expand, isExpanded } =
     useExpandableDescription(description);
 
   const handleShowFormClick = () => {
-    if (isAuthorized) {
-      navigate(AppRoute.Login);
+    if (!isAuthorized) {
+      void navigate(AppRoute.Login);
       return;
     }
 
@@ -60,8 +58,8 @@ const Details = ({
 
   return (
     <section
-      className={clsx("item-details", {
-        "item-details--form-open": isReviewFormOpen,
+      className={clsx('item-details', {
+        'item-details--form-open': isReviewFormOpen,
       })}
     >
       <div className="container">
@@ -69,12 +67,12 @@ const Details = ({
           <div className="item-details__top-wrapper">
             <h2 className="item-details__name">{title}</h2>
             <span className="item-details__price">
-              {formatValue(price, "price")}
+              {formatValue(price, 'price')}
             </span>
           </div>
           <div className="item-details__weight-wrapper">
             <span className="item-details__weight">
-              {formatValue(weight, "weight")}
+              {formatValue(weight, 'weight')}
             </span>
           </div>
           <div className="item-details__bottom-wrapper">
@@ -113,14 +111,14 @@ const Details = ({
 
               <div className="item-details__button-wrapper">
                 <button
-                  className={clsx("item-details__like-button", {
-                    "item-details__like-button--active": isFavorite,
+                  className={clsx('item-details__like-button', {
+                    'item-details__like-button--active': isFavorite,
                   })}
                   onClick={toggleFavorite}
                   aria-disabled={isFavoritePending}
                 >
                   <svg width="45" height="37" aria-hidden="true">
-                    <use href="#icon-like"></use>
+                    <use href="#icon-like" />
                   </svg>
                   <span className="visually-hidden">Понравилось</span>
                 </button>
@@ -130,7 +128,7 @@ const Details = ({
                   type="button"
                   onClick={handleShowFormClick}
                 >
-                  {isReviewFormOpen ? "Отменить" : "Оставить"} отзыв
+                  {isReviewFormOpen ? 'Отменить' : 'Оставить'} отзыв
                 </button>
               </div>
             </div>

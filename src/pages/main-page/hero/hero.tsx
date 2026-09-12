@@ -1,8 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
-import { AppRoute } from "../../const/infrastructure";
+import { Link, useLocation } from 'react-router-dom';
+import { AppRoute } from '../../../const/infrastructure';
+import { getLocationState } from '../../../utils/common';
 
-const WidgetHero = () => {
-  const location = useLocation()
+const Hero = () => {
+  const location = useLocation();
   return (
     <div className="hero">
       <div className="container">
@@ -19,7 +20,11 @@ const WidgetHero = () => {
           <p className="hero__subtitle">Твоя пушистая кондитерская</p>
           <p className="hero__title">КЕКС</p>
           <div className="hero__button-wrapper">
-            <Link className="btn" to={AppRoute.Catalog} state={{ from: location }}>
+            <Link
+              className="btn"
+              to={AppRoute.Catalog}
+              state={{ from: getLocationState(location) }}
+            >
               Скорее смотреть
             </Link>
           </div>
@@ -29,4 +34,4 @@ const WidgetHero = () => {
   );
 };
 
-export default WidgetHero;
+export default Hero;

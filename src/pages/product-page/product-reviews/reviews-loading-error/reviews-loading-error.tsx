@@ -1,16 +1,18 @@
-import clsx from "clsx";
-import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../../hooks";
-import { getIsReviewsLoading } from "../../../../store/slices/reviews/reviews.selectors";
-import { fetchReviewsAction } from "../../../../store/api-actions";
+import clsx from 'clsx';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { fetchReviewsAction } from '../../../../store/api-actions';
+import { getReviewsLoadingStatus } from '../../../../store/slices/reviews/reviews.selectors';
+import { LoadingStatus } from '../../../../const/infrastructure';
 
 const ReviewsLoadingError = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(getIsReviewsLoading);
+  const reviewsLoadingStatus = useAppSelector(getReviewsLoadingStatus);
+  const isReviewsLoading = reviewsLoadingStatus === LoadingStatus.Loading;
   const handleReloadReviews = () => {
     if (id) {
-      dispatch(fetchReviewsAction(id));
+      void dispatch(fetchReviewsAction(id));
     }
   };
 
@@ -22,12 +24,12 @@ const ReviewsLoadingError = () => {
             Не удалось загрузить комментарии
           </h2>
           <button
-            className={clsx("btn", "error-comments__button", {
-              "is-disabled": isLoading,
+            className={clsx('btn', 'error-comments__button', {
+              'is-disabled': isReviewsLoading,
             })}
             type="button"
             onClick={handleReloadReviews}
-            disabled={isLoading}
+            disabled={isReviewsLoading}
           >
             Попробовать ещё
           </button>

@@ -1,5 +1,5 @@
-import { useAppDispatch } from "../../../../hooks";
-import { resetFiltersAndSorting } from "../../../../store/slices/reviews/reviews.slice";
+import { useAppDispatch } from '../../../../hooks';
+import { resetFiltersAndSorting } from '../../../../store/slices/reviews/reviews.slice';
 
 const NotFoundReviews = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +19,7 @@ const NotFoundReviews = () => {
             Сбросить фильтры
           </button>
           <svg width="180" height="166" aria-hidden="true">
-            <use href="#icon-cake"></use>
+            <use href="#icon-cake" />
           </svg>
         </div>
       </div>

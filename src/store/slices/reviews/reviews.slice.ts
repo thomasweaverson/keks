@@ -1,25 +1,25 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { TReviewsState } from "../../../types/state";
-import { NameSpace } from "../../../const/infrastructure";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { TReviewsState } from '../../../types/state';
+import { LoadingStatus, NameSpace } from '../../../const/infrastructure';
 import {
   fetchLastReviewAction,
   fetchReviewsAction,
   postReviewAction,
-} from "../../api-actions";
+} from '../../api-actions';
 import {
   DEFAULT_REVIEWS_FILTER,
   DEFAULT_REVIEWS_SORT_ORDER,
-} from "../../../const/business";
+} from '../../../const/business';
 import type {
   TReviewsFilter,
   TReviewsSortOrder,
-} from "../../../types/business";
+} from '../../../types/business';
 
 const initialState: TReviewsState = {
   reviews: [],
-  isReviewsLoading: false,
-  isReviewsLoadingError: false,
+  reviewsLoadingStatus: LoadingStatus.Idle,
   lastReview: null,
+  lastReviewLoadingStatus: LoadingStatus.Idle,
   currentReviewsFilter: DEFAULT_REVIEWS_FILTER,
   currentReviewsSortOrder: DEFAULT_REVIEWS_SORT_ORDER,
 };
@@ -49,20 +49,26 @@ export const reviewsSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchReviewsAction.pending, (state) => {
-        state.isReviewsLoadingError = false;
-        state.isReviewsLoading = true;
+        state.reviewsLoadingStatus = LoadingStatus.Loading;
       })
       .addCase(fetchReviewsAction.fulfilled, (state, action) => {
-        state.isReviewsLoading = false;
         state.reviews = action.payload;
+        state.reviewsLoadingStatus = LoadingStatus.Loaded;
       })
       .addCase(fetchReviewsAction.rejected, (state) => {
-        state.isReviewsLoading = false;
-        state.isReviewsLoadingError = true;
         state.reviews = [];
+        state.reviewsLoadingStatus = LoadingStatus.Failed;
+      })
+      .addCase(fetchLastReviewAction.pending, (state) => {
+        state.lastReviewLoadingStatus = LoadingStatus.Loading;
       })
       .addCase(fetchLastReviewAction.fulfilled, (state, action) => {
         state.lastReview = action.payload;
+        state.lastReviewLoadingStatus = LoadingStatus.Loaded;
+      })
+      .addCase(fetchLastReviewAction.rejected, (state) => {
+        state.lastReview = null;
+        state.lastReviewLoadingStatus = LoadingStatus.Failed;
       })
       .addCase(postReviewAction.fulfilled, (state, action) => {
         state.reviews.unshift(action.payload);

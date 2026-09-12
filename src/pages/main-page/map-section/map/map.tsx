@@ -1,9 +1,10 @@
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import "./map.module.css";
-import L from "leaflet";
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import './map.css';
+import L from 'leaflet';
 
-import type { TLocation } from "../../../types/business";
-import MapController from "./map-controller";
+import type { TLocation } from '../../../../types/business';
+import { useMemo } from 'react';
+import MapLocationController from './map-location-controller/map-location-controller';
 
 type TMapProps = {
   location: TLocation;
@@ -12,12 +13,15 @@ type TMapProps = {
 const Map = ({ location }: TMapProps) => {
   const { latitude, longitude } = location.coordinates;
 
-  const icon = L.icon({
-    iconUrl: location.icon,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
+  const icon = useMemo(
+    () =>
+      L.icon({
+        iconUrl: location.icon,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      }),
+    [location.icon],
+  );
   return (
     <MapContainer
       className="map__wrapper"
@@ -30,7 +34,7 @@ const Map = ({ location }: TMapProps) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <MapController location={location} />
+      <MapLocationController location={location} />
 
       <Marker position={[latitude, longitude]} icon={icon} />
     </MapContainer>

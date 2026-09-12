@@ -1,5 +1,5 @@
-import FormField from "../../../components/form-field/form-field";
-import { useLoginForm } from "../../../hooks/use-login-form";
+import FormField from '../../../components/form-field/form-field';
+import { useLoginForm } from '../../../hooks/use-login-form';
 
 const LoginForm = () => {
   const {
@@ -58,7 +58,7 @@ const LoginForm = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Вход..." : "Войти"}
+          {isSubmitting ? 'Вход...' : 'Войти'}
         </button>
       </form>
     </div>

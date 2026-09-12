@@ -1,16 +1,19 @@
-import { createBrowserRouter } from "react-router-dom";
-import { AppRoute } from "../../const/infrastructure";
-import Layout from "../layout/layout";
-import ProtectedRoute from "../protected-route/protected-route";
-import type { TRouteHandle } from "../../types/infrastructure";
-import ErrorPage from "../../pages/error-page/error-page";
-import LoginPage from "../../pages/login-page/login-page";
-import RegistrationPage from "../../pages/registration-page/registration-page";
-import NotFoundPage from "../../pages/not-found-page/not-found-page";
-import MainPage from "../../pages/main-page/main-page";
-import FavoritesPage from "../../pages/favorites-page/favorites-page";
-import CatalogPage from "../../pages/catalog-page/catalog-page";
-import ProductPage from "../../pages/product-page/product-page";
+import { createBrowserRouter } from 'react-router-dom';
+
+import type { TRouteHandle } from '../../types/infrastructure';
+import { AppRoute } from '../../const/infrastructure';
+
+import Layout from '../layout/layout';
+import ProtectedRoute from '../protected-route/protected-route';
+
+import CatalogPage from '../../pages/catalog-page/catalog-page';
+import ErrorPage from '../../pages/error-page/error-page';
+import FavoritesPage from '../../pages/favorites-page/favorites-page';
+import LoginPage from '../../pages/login-page/login-page';
+import MainPage from '../../pages/main-page/main-page';
+import NotFoundPage from '../../pages/not-found-page/not-found-page';
+import ProductPage from '../../pages/product-page/product-page';
+import RegistrationPage from '../../pages/registration-page/registration-page';
 
 export const router = createBrowserRouter([
   {
@@ -70,7 +73,7 @@ export const router = createBrowserRouter([
             handle: { hideFooter: true } satisfies TRouteHandle,
           },
           {
-            path: "*",
+            path: '*',
             element: <NotFoundPage />,
             handle: { hideFooter: true } satisfies TRouteHandle,
           },

@@ -9,8 +9,8 @@ export type TUserInfo = TUser & {
 };
 
 type TRegistrationData = {
-  name: TUserInfo["name"];
-  email: TUserInfo["email"];
+  name: TUserInfo['name'];
+  email: TUserInfo['email'];
   password: string;
 };
 
@@ -24,6 +24,6 @@ export type TRegistrationResult = {
 };
 
 export type TAuthData = {
-  email: TUserInfo["email"];
-  password: TRegistrationData["password"];
+  email: TUserInfo['email'];
+  password: TRegistrationData['password'];
 };

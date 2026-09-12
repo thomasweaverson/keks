@@ -1,7 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
-import { formatValue } from "../../../utils/common";
-import { AppRoute } from "../../../const/infrastructure";
-import { getRussianPlural } from "./utils";
+import { Link, useLocation } from 'react-router-dom';
+import { formatValue, getLocationState } from '../../../utils/common';
+import { AppRoute } from '../../../const/infrastructure';
+import { getRussianPlural } from './utils';
 
 type TSummaryProps = {
   favoritesCount: number;
@@ -15,14 +15,14 @@ const Summary = ({ favoritesCount, totalPrice }: TSummaryProps) => {
       <div className="container">
         <h2 className="visually-hidden">Количество товаров в избранном.</h2>
         <p className="number-of-favourites__cakes">
-          {favoritesCount}{" "}
-          {getRussianPlural(favoritesCount, ["кекс", "кекса", "кексов"])}
+          {favoritesCount}{' '}
+          {getRussianPlural(favoritesCount, ['кекс', 'кекса', 'кексов'])}
         </p>
         <div className="number-of-favourites__wrapper">
           <div className="number-of-favourites__wrap-price">
             <p className="number-of-favourites__text">Всего</p>
             <p className="number-of-favourites__price">
-              {formatValue(totalPrice, "price")}
+              {formatValue(totalPrice, 'price')}
             </p>
           </div>
         </div>
@@ -30,7 +30,7 @@ const Summary = ({ favoritesCount, totalPrice }: TSummaryProps) => {
           <Link
             className="btn"
             to={AppRoute.Catalog}
-            state={{ from: location }}
+            state={{ from: getLocationState(location) }}
           >
             В каталог
           </Link>

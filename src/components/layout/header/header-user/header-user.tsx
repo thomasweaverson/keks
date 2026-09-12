@@ -1,19 +1,19 @@
-import { memo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { getUserInfo } from '../../../store/slices/user/user.selectors';
-import { getFavoritesCount } from '../../../store/slices/favorites/favorites.selectors';
-import { logoutAction } from '../../../store/api-actions';
-import { AppRoute } from '../../../const/infrastructure';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { getUserInfo } from '../../../../store/slices/user/user.selectors';
+import { getFavoritesCount } from '../../../../store/slices/favorites/favorites.selectors';
+import { logoutAction } from '../../../../store/api-actions';
+import { AppRoute } from '../../../../const/infrastructure';
+import { getLocationState } from '../../../../utils/common';
 
-const HeaderUser = memo(() => {
+const HeaderUser = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation()
+  const location = useLocation();
   const userData = useAppSelector(getUserInfo);
   const favoritesCount = useAppSelector(getFavoritesCount);
-  const handleLogout = useCallback(() => {
-    dispatch(logoutAction());
-  }, [dispatch]);
+  const handleLogout = () => {
+    void dispatch(logoutAction());
+  };
 
   return (
     <>
@@ -21,13 +21,12 @@ const HeaderUser = memo(() => {
         <div className="header__user-info">
           <div className="header__user-avatar">
             <picture>
-
               <img
                 src={userData?.avatarUrl ?? '/img/content/user-avatar.jpg'}
                 srcSet="/img/content/user-avatar@2x.jpg 2x"
                 width="62"
                 height="62"
-                alt="Аватар пользователя."
+                alt=""
               />
             </picture>
           </div>
@@ -36,13 +35,19 @@ const HeaderUser = memo(() => {
       </div>
 
       <div className="header__buttons">
-        <Link className="header__favourite" to={AppRoute.Favorites} state={{ from: location }}>
+        <Link
+          className="header__favourite"
+          to={AppRoute.Favorites}
+          state={{ from: getLocationState(location) }}
+        >
           <span className="header__favourite-icon">
             <svg width="33" height="29" aria-hidden="true">
               <use href="#icon-favourite" />
             </svg>
           </span>
-          {favoritesCount > 0 && <span className="header__favourite-number">{favoritesCount}</span>}
+          {favoritesCount > 0 && (
+            <span className="header__favourite-number">{favoritesCount}</span>
+          )}
           <span className="visually-hidden">Избранное</span>
         </Link>
 
@@ -60,8 +65,6 @@ const HeaderUser = memo(() => {
       </div>
     </>
   );
-});
+};
 
-HeaderUser.displayName = 'HeaderUser';
-
-export default HeaderUser
+export default HeaderUser;

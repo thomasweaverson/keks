@@ -1,12 +1,12 @@
-import { useAppSelector } from "../../../hooks";
+import { useAppSelector } from '../../../hooks';
 import {
   getCategories,
   getCurrentCategory,
   getSelectedTypes,
   getTypesByCurrentCategory,
-} from "../../../store/slices/filter/filter.selectors";
-import FilterFirst from "./filter-first/filter-first";
-import FilterSecond from "./filter-second/filter-second";
+} from '../../../store/slices/filter/filter.selectors';
+import FilterFirst from './filter-first/filter-first';
+import FilterSecond from './filter-second/filter-second';
 
 const Filter = () => {
   const currentCategory = useAppSelector(getCurrentCategory);

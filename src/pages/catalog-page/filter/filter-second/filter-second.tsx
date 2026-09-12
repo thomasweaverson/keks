@@ -1,7 +1,7 @@
-import { useAppDispatch } from "../../../../hooks";
-import { toggleType } from "../../../../store/slices/filter/filter.slice";
-import type { TProductType } from "../../../../types/product";
-import { getProductTypeLabel } from "./utils";
+import { useAppDispatch } from '../../../../hooks';
+import { toggleType } from '../../../../store/slices/filter/filter.slice';
+import type { TProductType } from '../../../../types/product';
+import { getProductTypeLabel } from './utils';
 
 type TFilterSecondProps = {
   types: TProductType[];

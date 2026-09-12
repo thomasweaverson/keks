@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
-import { useRegistrationForm } from "../../../hooks/use-registration-form";
-import styles from "./registration-form.module.css";
-import clsx from "clsx";
-import FormField from "../../../components/form-field/form-field";
+// consciously vVv
+/* eslint-disable consistent-return */
+/* eslint-disable @eslint-react/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from 'react';
+import { useRegistrationForm } from '../../../hooks/use-registration-form';
+import styles from './registration-form.module.css';
+import clsx from 'clsx';
+import FormField from '../../../components/form-field/form-field';
 
 const RegistrationForm = () => {
   const {
@@ -18,19 +22,18 @@ const RegistrationForm = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!values.avatar || errors.avatar) {
+    if (!values.avatar) {
       setAvatarPreview(null);
-      return;
+    } else {
+      const objectUrl = URL.createObjectURL(values.avatar);
+
+      setAvatarPreview(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
     }
-
-    const objectUrl = URL.createObjectURL(values.avatar);
-
-    setAvatarPreview(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [values.avatar, errors.avatar]);
+  }, [values.avatar]);
 
   return (
     <div className="register-page__form">
@@ -83,12 +86,12 @@ const RegistrationForm = () => {
 
           <div
             className={clsx(
-              "custom-input",
-              "register-page__field",
+              'custom-input',
+              'register-page__field',
               styles.field,
               {
-                "is-invalid": touched.avatar && errors.avatar,
-                "is-valid": touched.avatar && !errors.avatar,
+                'is-invalid': touched.avatar && errors.avatar,
+                'is-valid': touched.avatar && !errors.avatar,
               },
             )}
           >
@@ -105,12 +108,12 @@ const RegistrationForm = () => {
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.avatar)}
                 aria-describedby={
-                  errors.avatar ? "registration-avatar-error" : undefined
+                  errors.avatar ? 'registration-avatar-error' : undefined
                 }
               />
             </label>
 
-            {avatarPreview && (
+            {avatarPreview && !errors.avatar && (
               <img
                 className={styles.avatarPreview}
                 src={avatarPreview}
@@ -131,7 +134,7 @@ const RegistrationForm = () => {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
+          {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
         </button>
       </form>
     </div>

@@ -1,5 +1,5 @@
-import type { AxiosInstance } from "axios";
-import type { store } from "../store";
+import type { AxiosInstance } from 'axios';
+import type { store } from '../store';
 import type {
   TCategoryWithTypes,
   TProduct,
@@ -7,13 +7,14 @@ import type {
   TProductExtended,
   TProductType,
   TReview,
-} from "./product";
-import type { TUserInfo } from "./user";
+} from './product';
+import type { TUserInfo } from './user';
 import type {
   TAuthorizationStatus,
+  TLoadingStatus,
   TRegistrationStatus,
-} from "./infrastructure";
-import type { TReviewsFilter, TReviewsSortOrder } from "./business";
+} from './infrastructure';
+import type { TReviewsFilter, TReviewsSortOrder } from './business';
 
 export type TState = ReturnType<typeof store.getState>;
 
@@ -37,16 +38,13 @@ export type TAppThunkConfig = {
 
 export type TProductsState = {
   products: TProduct[];
-  isProductsLoading: boolean;
-  isProductsLoaded: boolean;
-  isProductsLoadingError: boolean;
+  productsLoadingStatus: TLoadingStatus;
   randomPack: [TProduct, TProduct, TProduct] | null;
 };
 
 export type TProductState = {
   product: null | TProductExtended;
-  isProductLoading: boolean;
-  isProductLoadingError: boolean;
+  productLoadingStatus: TLoadingStatus;
   isProductNotFound: boolean;
 };
 
@@ -59,14 +57,16 @@ export type TUserState = {
 
 export type TFavoritesState = {
   favorites: TProductExtended[];
-  isFavoritesLoadingError: boolean;
+  favoritesLoadingStatus: TLoadingStatus;
 };
 
 export type TReviewsState = {
   reviews: TReview[];
-  isReviewsLoading: boolean;
-  isReviewsLoadingError: boolean;
-  lastReview: null | TReview;
+  reviewsLoadingStatus: TLoadingStatus;
+
+  lastReview: TReview | null;
+  lastReviewLoadingStatus: TLoadingStatus;
+
   currentReviewsFilter: TReviewsFilter;
   currentReviewsSortOrder: TReviewsSortOrder;
 };
@@ -75,6 +75,5 @@ export type TFilterState = {
   filters: TCategoryWithTypes[];
   currentCategory: TProductCategory | null;
   currentTypes: TProductType[];
-  isFiltersLoadingError: boolean;
-  isFiltersLoading: boolean;
+  filtersLoadingStatus: TLoadingStatus;
 };

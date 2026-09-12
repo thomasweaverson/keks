@@ -1,8 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
-import { AppRoute } from "../../../const/infrastructure";
-import { memo } from "react";
+import { Link, useLocation } from 'react-router-dom';
+import { AppRoute } from '../../../../const/infrastructure';
 
-const HeaderLogo = memo(() => {
+const HeaderLogo = () => {
   const { pathname } = useLocation();
   const isMainPage = pathname === AppRoute.Root;
 
@@ -28,8 +27,6 @@ const HeaderLogo = memo(() => {
       {logoImage}
     </Link>
   );
-});
-
-HeaderLogo.displayName = "HeaderLogo";
+};
 
 export default HeaderLogo;

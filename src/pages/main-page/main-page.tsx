@@ -1,19 +1,24 @@
-import WidgetHero from "../../components/widget-hero/widget-hero";
-import WidgetLastReview from "../../components/widget-last-review/widget-last-review";
-import WidgetMap from "../../components/widget-map/widget-map";
-import WidgetRandomProducts from "../../components/widget-random-products/widget-random-products";
-import { useAppSelector } from "../../hooks";
-import { getIsFavoritesLoadingError } from "../../store/slices/favorites/favorites.selectors";
+import { LoadingStatus } from '../../const/infrastructure';
+import { useAppSelector } from '../../hooks';
+import { getFavoritesLoadingStatus } from '../../store/slices/favorites/favorites.selectors';
 import {
-  getIsProductsLoadingError,
+  getProductsLoadingStatus,
   getRandomPack,
-} from "../../store/slices/products/products.selectors";
-import ErrorPage from "../error-page/error-page";
+} from '../../store/slices/products/products.selectors';
+import ErrorPage from '../error-page/error-page';
+import Hero from './hero/hero';
+import LastReview from './last-review/last-review';
+import MapSection from './map-section/map-section';
+import RandomProducts from './random-products/random-products';
 
 const MainPage = () => {
   const randomThreeProducts = useAppSelector(getRandomPack);
-  const isProductsLoadingError = useAppSelector(getIsProductsLoadingError);
-  const isFavoritesLoadingError = useAppSelector(getIsFavoritesLoadingError);
+  const productsLoadingStatus = useAppSelector(getProductsLoadingStatus);
+  const isProductsLoadingError = productsLoadingStatus === LoadingStatus.Failed;
+
+  const favoritesLoadingStatus = useAppSelector(getFavoritesLoadingStatus);
+  const isFavoritesLoadingError =
+    favoritesLoadingStatus === LoadingStatus.Failed;
 
   if (isProductsLoadingError || isFavoritesLoadingError) {
     return <ErrorPage />;
@@ -21,10 +26,11 @@ const MainPage = () => {
 
   return (
     <>
-      <WidgetHero />
-      <WidgetRandomProducts products={randomThreeProducts} />
-      <WidgetLastReview />
-      <WidgetMap />
+      <h1 className="visually-hidden">КЕКС - Твоя пушистая кондитерская</h1>
+      <Hero />
+      <RandomProducts products={randomThreeProducts} />
+      <LastReview />
+      <MapSection />
     </>
   );
 };

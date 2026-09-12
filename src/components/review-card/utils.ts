@@ -1,4 +1,4 @@
-import type { TReview } from "../../types/product";
+import type { TReview } from '../../types/product';
 
 export const formatReviewDate = (isoDate: TReview['isoDate']): string => {
   const date = new Date(isoDate);
@@ -8,3 +8,7 @@ export const formatReviewDate = (isoDate: TReview['isoDate']): string => {
     month: '2-digit',
   });
 };
+
+export const getReviewDateTime = (
+  isoDate: TReview['isoDate'],
+): string => isoDate.slice(0, 10);

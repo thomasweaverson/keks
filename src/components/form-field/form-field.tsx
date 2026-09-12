@@ -1,12 +1,12 @@
-import clsx from "clsx";
-import type { ChangeEventHandler, FocusEventHandler } from "react";
-import styles from "./form-field.module.css";
+import clsx from 'clsx';
+import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import styles from './form-field.module.css';
 
 type TFormFieldProps = {
   name: string;
   label: string;
   placeholder: string;
-  type: "text" | "email" | "password";
+  type: 'text' | 'email' | 'password';
   value: string;
   error?: string;
   touched: boolean;
@@ -39,8 +39,8 @@ const FormField = ({
   return (
     <div
       className={clsx(styles.field, className, {
-        "is-invalid": isInvalid,
-        "is-valid": isValid,
+        'is-invalid': isInvalid,
+        'is-valid': isValid,
       })}
     >
       <label>

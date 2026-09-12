@@ -1,6 +1,6 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import type { TAppThunkConfig } from "../types/state";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import type { TAppThunkConfig } from '../types/state';
 
 export const createAppAsyncThunk = <Returned, ThunkArg = void>(
   typePrefix: string,
@@ -28,7 +28,7 @@ export const createAppAsyncThunk = <Returned, ThunkArg = void>(
         }
         return thunkAPI.rejectWithValue({
           status: 500,
-          message: "Unknown error",
+          message: 'Unknown error',
         });
       }
     },

@@ -1,27 +1,31 @@
-import { ToastContainer } from "react-toastify";
-import "./style.css";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
+import './style.css';
+import 'react-toastify/dist/ReactToastify.css';
 import 'leaflet/dist/leaflet.css';
-import { checkAuthAction } from "./store/api-actions";
-import { store } from "./store";
-import ReactDOM from "react-dom/client";
-import React from "react";
-import { Provider } from "react-redux";
-import { HelmetProvider } from "react-helmet-async";
-import App from "./components/app/app";
+import { checkAuthAction } from './store/api-actions';
+import { store } from './store';
+import ReactDOM from 'react-dom/client';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
+import App from './components/app/app';
 
-store.dispatch(checkAuthAction());
+void store.dispatch(checkAuthAction());
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
-);
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <HelmetProvider>
-          <ToastContainer />
-          <App />
+        <ToastContainer />
+        <App />
       </HelmetProvider>
     </Provider>
   </React.StrictMode>,

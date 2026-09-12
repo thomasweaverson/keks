@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { DESCRIPTION_LENGTH } from "../const/business";
+import { useState } from 'react';
+import { DESCRIPTION_LENGTH } from '../const/business';
 
 const useExpandableDescription = (description: string) => {
   const [isExpanded, setIsExpanded] = useState(false);

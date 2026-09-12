@@ -1,10 +1,10 @@
-import { NameSpace } from "../../../const/infrastructure";
+import { NameSpace } from '../../../const/infrastructure';
 import type {
   TAuthorizationStatus,
   TRegistrationStatus,
-} from "../../../types/infrastructure";
-import type { TState } from "../../../types/state";
-import type { TUserInfo } from "../../../types/user";
+} from '../../../types/infrastructure';
+import type { TState } from '../../../types/state';
+import type { TUserInfo } from '../../../types/user';
 
 export const getAuthorizationStatus = (
   state: Pick<TState, typeof NameSpace.User>,

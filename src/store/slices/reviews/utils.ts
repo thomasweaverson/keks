@@ -1,9 +1,13 @@
-import { HIGH_LEVEL_RATING_THRESHOLD, ReviewsFilter, SortOrder } from "../../../const/business";
+import {
+  HIGH_LEVEL_RATING_THRESHOLD,
+  ReviewsFilter,
+  SortOrder,
+} from '../../../const/business';
 import type {
   TReviewsFilter,
   TReviewsSortOrder,
-} from "../../../types/business";
-import type { TReview } from "../../../types/product";
+} from '../../../types/business';
+import type { TReview } from '../../../types/product';
 
 export const filterReviews = (
   reviews: TReview[],
@@ -14,21 +18,26 @@ export const filterReviews = (
       return reviews;
 
     case ReviewsFilter.High:
-      return reviews.filter((review) => review.rating >= HIGH_LEVEL_RATING_THRESHOLD);
+      return reviews.filter(
+        (review) => review.rating >= HIGH_LEVEL_RATING_THRESHOLD,
+      );
 
     case ReviewsFilter.Low:
-      return reviews.filter((review) => review.rating < HIGH_LEVEL_RATING_THRESHOLD);
+      return reviews.filter(
+        (review) => review.rating < HIGH_LEVEL_RATING_THRESHOLD,
+      );
+    default:
+      return reviews;
   }
 };
 
 export const sortReviews = (
   reviews: TReview[],
   sortOrder: TReviewsSortOrder,
-): TReview[] => {
-  return [...reviews].sort((a, b) => {
+): TReview[] =>
+  [...reviews].sort((a, b) => {
     const dateA = new Date(a.isoDate).getTime();
     const dateB = new Date(b.isoDate).getTime();
 
     return sortOrder === SortOrder.NEWEST ? dateB - dateA : dateA - dateB;
   });
-};

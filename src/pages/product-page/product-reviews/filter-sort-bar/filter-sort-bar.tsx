@@ -1,10 +1,18 @@
-
-import clsx from "clsx";
-import { ReviewsFilter, SortOrder } from "../../../../const/business";
-import { useAppDispatch, useAppSelector } from "../../../../hooks";
-import { getCurrentReviewsFilter, getCurrentReviewsSortOrder } from "../../../../store/slices/reviews/reviews.selectors";
-import { setReviewsFilter, setReviewsSortOrder } from "../../../../store/slices/reviews/reviews.slice";
-import type { TReviewsFilter, TReviewsSortOrder } from "../../../../types/business";
+import clsx from 'clsx';
+import { ReviewsFilter, SortOrder } from '../../../../const/business';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import {
+  getCurrentReviewsFilter,
+  getCurrentReviewsSortOrder,
+} from '../../../../store/slices/reviews/reviews.selectors';
+import {
+  setReviewsFilter,
+  setReviewsSortOrder,
+} from '../../../../store/slices/reviews/reviews.slice';
+import type {
+  TReviewsFilter,
+  TReviewsSortOrder,
+} from '../../../../types/business';
 
 const reviewFilters: [string, TReviewsFilter][] = Object.entries(ReviewsFilter);
 
@@ -43,11 +51,11 @@ const FilterSortBar = () => {
                   height="15"
                   aria-hidden="true"
                 >
-                  <use href="#icon-polygon"></use>
+                  <use href="#icon-polygon" />
                 </svg>
               </button>
               <ul className="filter-sort__filter-list">
-                {reviewFilters .map(([filter, label]) => {
+                {reviewFilters.map(([filter, label]) => {
                   const filterId = filter.toLowerCase();
                   return (
                     <li className="filter-sort__filter-item" key={filter}>
@@ -77,10 +85,10 @@ const FilterSortBar = () => {
             <div className="filter-sort__sort-btns-wrap">
               <button
                 className={clsx(
-                  "filter-sort__sort-btn",
-                  "filter-sort__sort-btn--inc",
+                  'filter-sort__sort-btn',
+                  'filter-sort__sort-btn--inc',
                   {
-                    "filter-sort__sort-btn--active":
+                    'filter-sort__sort-btn--active':
                       currentSortOrder === SortOrder.NEWEST,
                   },
                 )}
@@ -94,15 +102,15 @@ const FilterSortBar = () => {
                   height="13"
                   aria-hidden="true"
                 >
-                  <use href="#icon-chevron-top"></use>
+                  <use href="#icon-chevron-top" />
                 </svg>
               </button>
               <button
                 className={clsx(
-                  "filter-sort__sort-btn",
-                  "filter-sort__sort-btn--desc",
+                  'filter-sort__sort-btn',
+                  'filter-sort__sort-btn--desc',
                   {
-                    "filter-sort__sort-btn--active":
+                    'filter-sort__sort-btn--active':
                       currentSortOrder === SortOrder.OLDEST,
                   },
                 )}
@@ -116,7 +124,7 @@ const FilterSortBar = () => {
                   height="13"
                   aria-hidden="true"
                 >
-                  <use href="#icon-chevron-top"></use>
+                  <use href="#icon-chevron-top" />
                 </svg>
               </button>
             </div>

@@ -1,24 +1,14 @@
-import { useEffect, useState } from "react";
-import { REVIEWS_PER_STEP } from "../../../../const/business";
-import { useAppSelector } from "../../../../hooks";
-import {
-  getCurrentReviewsFilter,
-  getCurrentReviewsSortOrder,
-  getFilteredAndSortedReviews,
-} from "../../../../store/slices/reviews/reviews.selectors";
-import ShowMoreCommentsButton from "./show-more-comments-button/show-more-comments-button";
-import ReviewCard from "../../../../components/review-card/review-card";
+import { useState } from 'react';
+import { REVIEWS_PER_STEP } from '../../../../const/business';
+import { useAppSelector } from '../../../../hooks';
+import { getFilteredAndSortedReviews } from '../../../../store/slices/reviews/reviews.selectors';
+import ShowMoreCommentsButton from './show-more-comments-button/show-more-comments-button';
+import ReviewCard from '../../../../components/review-card/review-card';
 
 const ReviewsList = () => {
   const reviews = useAppSelector(getFilteredAndSortedReviews);
-  const currentFilter = useAppSelector(getCurrentReviewsFilter);
-  const currentSortOrder = useAppSelector(getCurrentReviewsSortOrder);
   const [visibleReviewsCount, setVisibleReviewsCount] =
     useState(REVIEWS_PER_STEP);
-
-  useEffect(() => {
-    setVisibleReviewsCount(REVIEWS_PER_STEP);
-  }, [currentFilter, currentSortOrder]);
 
   const visibleReviews = reviews.slice(0, visibleReviewsCount);
 

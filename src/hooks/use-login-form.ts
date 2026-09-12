@@ -3,22 +3,22 @@ import {
   useState,
   type ChangeEvent,
   type SubmitEvent,
-} from "react";
-import { useAppDispatch } from ".";
-import { authorizeUserAction } from "../store/api-actions";
+} from 'react';
+import { useAppDispatch } from '.';
+import { authorizeUserAction } from '../store/api-actions';
 import type {
   LoginFormErrors,
   LoginFormValues,
-} from "../pages/login-page/login-form/types";
+} from '../pages/login-page/login-form/types';
 import {
   validateEmail,
   validateForm,
   validatePassword,
-} from "../pages/login-page/login-form/utils";
+} from '../pages/login-page/login-form/utils';
 
 const INITIAL_VALUES: LoginFormValues = {
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 };
 
 export const useLoginForm = () => {
@@ -43,25 +43,23 @@ export const useLoginForm = () => {
       [field]: value,
     }));
 
-    if (field === "email") {
-      const error = validateEmail(value);
+    if (field === 'email') {
+      const emailError = validateEmail(value);
 
       setErrors((current) => ({
         ...current,
-        email: error,
+        email: emailError,
       }));
 
       return;
     }
 
-    if (field === "password") {
-      const error = validatePassword(value);
+    const error = validatePassword(value);
 
-      setErrors((current) => ({
-        ...current,
-        password: error,
-      }));
-    }
+    setErrors((current) => ({
+      ...current,
+      password: error,
+    }));
   }, []);
 
   const handleBlur = useCallback(

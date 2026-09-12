@@ -1,14 +1,11 @@
-import axios, {
-  AxiosError,
-  type AxiosInstance,
-  type AxiosResponse,
-} from "axios";
-import { getToken } from "./token";
-import { toast } from "react-toastify";
-import { StatusCodes } from "http-status-codes";
-import { BACKEND_URL, REQUEST_TIMEOUT } from "../const/infrastructure";
+import type { AxiosError } from 'axios';
+import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
+import { getToken } from './token';
+import { toast } from 'react-toastify';
+import { StatusCodes } from 'http-status-codes';
+import { BACKEND_URL, REQUEST_TIMEOUT } from '../const/infrastructure';
 
-declare module "axios" {
+declare module 'axios' {
   export interface AxiosRequestConfig {
     skipToast?: boolean;
   }
@@ -33,7 +30,7 @@ const StatusCodeMapping: Record<number, boolean> = {
 };
 
 const shouldDisplayError = (response: AxiosResponse) =>
-  !!StatusCodeMapping[response.status];
+  StatusCodeMapping[response.status];
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({
@@ -45,7 +42,7 @@ export const createAPI = (): AxiosInstance => {
     const token = getToken();
 
     if (token) {
-      config.headers["X-Token"] = token;
+      config.headers['X-Token'] = token;
     }
     return config;
   });
@@ -53,21 +50,15 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      console.log("INTERCEPTOR", {
-        status: error.response?.status,
-        skipToast: error.config?.skipToast,
-        url: error.config?.url,
-      });
-
       const shouldSkipToast = error.config?.skipToast;
 
       if (!shouldSkipToast) {
         if (error.response && shouldDisplayError(error.response)) {
           const errorMessage =
-            error.response.data?.message || "Произошла ошибка при запросе";
+            error.response.data.message || 'Произошла ошибка при запросе';
           toast.warn(errorMessage);
         } else if (!error.response) {
-          toast.warn("Сервер недоступен или отсутствует подключение");
+          toast.warn('Сервер недоступен или отсутствует подключение');
         }
       }
 

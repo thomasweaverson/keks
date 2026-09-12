@@ -2,23 +2,23 @@ import {
   MAX_AVATAR_HEIGHT,
   MAX_AVATAR_SIZE,
   MAX_AVATAR_WIDTH,
-} from "../../../const/business";
+} from '../../../const/business';
 import {
   EMAIL_REGEXP,
   NAME_REGEXP,
   PASSWORD_REGEXP,
-} from "../../../const/regexp";
-import type { RegistrationErrors, RegistrationFormValues } from "./types";
+} from '../../../const/regexp';
+import type { RegistrationErrors, RegistrationFormValues } from './types';
 
-const AVATAR_TYPES = ["image/jpeg", "image/png"];
+const AVATAR_TYPES = ['image/jpeg', 'image/png'];
 
 export const validateName = (name: string): string | undefined => {
   if (!name.trim()) {
-    return "Введите имя";
+    return 'Введите имя';
   }
 
   if (!NAME_REGEXP.test(name)) {
-    return "Имя должно содержать хотя бы одну букву";
+    return 'Имя должно содержать хотя бы одну букву';
   }
 
   return undefined;
@@ -26,11 +26,11 @@ export const validateName = (name: string): string | undefined => {
 
 export const validateEmail = (email: string): string | undefined => {
   if (!email.trim()) {
-    return "Введите почту";
+    return 'Введите почту';
   }
 
   if (!EMAIL_REGEXP.test(email)) {
-    return "Введите корректный адрес электронной почты";
+    return 'Введите корректный адрес электронной почты';
   }
 
   return undefined;
@@ -38,11 +38,11 @@ export const validateEmail = (email: string): string | undefined => {
 
 export const validatePassword = (password: string): string | undefined => {
   if (!password) {
-    return "Введите пароль";
+    return 'Введите пароль';
   }
 
   if (!PASSWORD_REGEXP.test(password)) {
-    return "Пароль должен содержать хотя бы одну букву и одну цифру и не должен содержать пробелы";
+    return 'Пароль должен содержать хотя бы одну букву и одну цифру и не должен содержать пробелы';
   }
 
   return undefined;
@@ -66,7 +66,7 @@ const getImageDimensions = (
 
     image.onerror = () => {
       URL.revokeObjectURL(objectUrl);
-      reject(new Error("Не удалось прочитать изображение"));
+      reject(new Error('Не удалось прочитать изображение'));
     };
 
     image.src = objectUrl;
@@ -80,21 +80,21 @@ export const validateAvatar = async (
   }
 
   if (!AVATAR_TYPES.includes(file.type)) {
-    return "Аватар должен быть в формате JPG или PNG";
+    return 'Аватар должен быть в формате JPG или PNG';
   }
 
   if (file.size >= MAX_AVATAR_SIZE) {
-    return "Размер изображения должен быть меньше 1 МБ";
+    return 'Размер изображения должен быть меньше 1 МБ';
   }
 
   try {
     const { width, height } = await getImageDimensions(file);
 
     if (width > MAX_AVATAR_WIDTH || height > MAX_AVATAR_HEIGHT) {
-      return "Размер изображения не должен превышать 100x100 пикселей";
+      return 'Размер изображения не должен превышать 100x100 пикселей';
     }
   } catch {
-    return "Не удалось прочитать изображение";
+    return 'Не удалось прочитать изображение';
   }
 
   return undefined;

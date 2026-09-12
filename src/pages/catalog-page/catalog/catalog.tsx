@@ -1,27 +1,16 @@
-import { useEffect, useState } from "react";
-import type { TProduct } from "../../../types/product";
-import { CATALOG_CARDS_PER_STEP } from "../../../const/business";
-import CatalogList from "../../../components/catalog-list/catalog-list";
-import { useAppSelector } from "../../../hooks";
-import {
-  getCurrentCategory,
-  getSelectedTypes,
-} from "../../../store/slices/filter/filter.selectors";
-import { handleScrollToTop } from "../../../utils/common";
+import { useState } from 'react';
+import type { TProduct } from '../../../types/product';
+import { CATALOG_CARDS_PER_STEP } from '../../../const/business';
+import CatalogList from '../../../components/catalog-list/catalog-list';
+
+import { handleScrollToTop } from '../../../utils/common';
 
 type TCatalogProps = {
   filteredProducts: TProduct[];
 };
 
 const Catalog = ({ filteredProducts }: TCatalogProps) => {
-  const currentCategory = useAppSelector(getCurrentCategory);
-  const selectedTypes = useAppSelector(getSelectedTypes);
-
   const [visibleCount, setVisibleCount] = useState(CATALOG_CARDS_PER_STEP);
-
-  useEffect(() => {
-    setVisibleCount(CATALOG_CARDS_PER_STEP);
-  }, [currentCategory, selectedTypes]);
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 

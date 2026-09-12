@@ -1,12 +1,7 @@
 import { EMAIL_REGEXP, PASSWORD_REGEXP } from '../../../const/regexp';
-import type {
-  LoginFormErrors,
-  LoginFormValues,
-} from './types';
+import type { LoginFormErrors, LoginFormValues } from './types';
 
-export const validateEmail = (
-  email: string
-): string | undefined => {
+export const validateEmail = (email: string): string | undefined => {
   if (!email.trim()) {
     return 'Введите e-mail';
   }
@@ -18,9 +13,7 @@ export const validateEmail = (
   return undefined;
 };
 
-export const validatePassword = (
-  password: string
-): string | undefined => {
+export const validatePassword = (password: string): string | undefined => {
   if (!password) {
     return 'Введите пароль';
   }
@@ -32,9 +25,7 @@ export const validatePassword = (
   return undefined;
 };
 
-export const validateForm = (
-  values: LoginFormValues
-): LoginFormErrors => {
+export const validateForm = (values: LoginFormValues): LoginFormErrors => {
   const errors: LoginFormErrors = {};
 
   const emailError = validateEmail(values.email);

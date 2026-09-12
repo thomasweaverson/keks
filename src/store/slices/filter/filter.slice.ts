@@ -1,15 +1,14 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { TFilterState } from "../../../types/state";
-import { NameSpace } from "../../../const/infrastructure";
-import { fetchFiltersAction } from "../../api-actions";
-import type { TProductCategory, TProductType } from "../../../types/product";
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { TFilterState } from '../../../types/state';
+import { LoadingStatus, NameSpace } from '../../../const/infrastructure';
+import { fetchFiltersAction } from '../../api-actions';
+import type { TProductCategory, TProductType } from '../../../types/product';
 
 const initialState: TFilterState = {
   filters: [],
   currentCategory: null,
   currentTypes: [],
-  isFiltersLoading: false,
-  isFiltersLoadingError: false,
+  filtersLoadingStatus: LoadingStatus.Idle,
 };
 
 export const filterSlice = createSlice({
@@ -40,17 +39,14 @@ export const filterSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchFiltersAction.pending, (state) => {
-        ((state.isFiltersLoading = true),
-          (state.isFiltersLoadingError = false));
+        state.filtersLoadingStatus = LoadingStatus.Loading;
       })
       .addCase(fetchFiltersAction.fulfilled, (state, action) => {
-        state.isFiltersLoading = false;
         state.filters = action.payload;
-        state.isFiltersLoadingError = false;
+        state.filtersLoadingStatus = LoadingStatus.Loaded;
       })
       .addCase(fetchFiltersAction.rejected, (state) => {
-        state.isFiltersLoading = false;
-        state.isFiltersLoadingError = true;
+        state.filtersLoadingStatus = LoadingStatus.Failed;
       });
   },
 });

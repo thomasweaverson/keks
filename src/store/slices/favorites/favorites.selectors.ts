@@ -1,6 +1,6 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { NameSpace } from "../../../const/infrastructure";
-import type { TState } from "../../../types/state";
+import { createSelector } from '@reduxjs/toolkit';
+import { NameSpace } from '../../../const/infrastructure';
+import type { TState } from '../../../types/state';
 
 export const getFavorites = (state: Pick<TState, typeof NameSpace.Favorites>) =>
   state[NameSpace.Favorites].favorites;
@@ -14,5 +14,6 @@ export const getFavoritesTotalPrice = createSelector(
   (favorites) => favorites.reduce((total, product) => total + product.price, 0),
 );
 
-export const getIsFavoritesLoadingError = (state: Pick<TState, typeof NameSpace.Favorites>) =>
-  state[NameSpace.Favorites].isFavoritesLoadingError;
+export const getFavoritesLoadingStatus = (
+  state: Pick<TState, typeof NameSpace.Favorites>,
+) => state[NameSpace.Favorites].favoritesLoadingStatus;

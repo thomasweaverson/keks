@@ -1,17 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
-import type { TProduct } from "../../types/product";
-import { AppRoute } from "../../const/infrastructure";
-import clsx from "clsx";
+import clsx from 'clsx';
+import { Link, useLocation } from 'react-router-dom';
 
-import { formatValue } from "../../utils/common";
-import useFavorite from "../../hooks/useFavorite";
+import useFavorite from '../../hooks/use-favorite';
+import { AppRoute } from '../../const/infrastructure';
+import type { TProduct } from '../../types/product';
+import { formatValue, getLocationState } from '../../utils/common';
 
 type TCardProps = {
   product: TProduct;
-  isFull?: boolean;
+  isLarge?: boolean;
 };
 
-const Card = ({ product, isFull = false }: TCardProps) => {
+const Card = ({ product, isLarge = false }: TCardProps) => {
   const location = useLocation();
 
   const {
@@ -27,17 +27,16 @@ const Card = ({ product, isFull = false }: TCardProps) => {
   const { isPending: isFavoritePending, toggleFavorite } = useFavorite(
     id,
     isFavorite,
-    location,
   );
 
   const productPath = `${AppRoute.Product}/${id}`;
 
   return (
-    <div className={clsx("card-item", { "card-item--big": isFull })}>
+    <div className={clsx('card-item', { 'card-item--big': isLarge })}>
       <Link
         className="card-item__img-link"
         to={productPath}
-        state={{ from: location }}
+        state={{ from: getLocationState(location) }}
       >
         <div className="card-item__img-wrapper">
           <picture>
@@ -46,7 +45,7 @@ const Card = ({ product, isFull = false }: TCardProps) => {
               src={previewImage}
               width="241"
               height="245"
-              alt={product.title}
+              alt={title}
             />
           </picture>
         </div>
@@ -54,28 +53,28 @@ const Card = ({ product, isFull = false }: TCardProps) => {
       </Link>
 
       <button
-        className={clsx("card-item__favorites", {
-          "card-item__favorites--active": isFavorite,
+        className={clsx('card-item__favorites', {
+          'card-item__favorites--active': isFavorite,
         })}
         onClick={toggleFavorite}
         aria-disabled={isFavoritePending}
       >
         <span className="visually-hidden">
-          {isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+          {isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
         </span>
         <svg width="51" height="41" aria-hidden="true">
-          <use href="#icon-like"></use>
+          <use href="#icon-like" />
         </svg>
       </button>
 
-      {isFull && (
-        <span className="card-item__price">{formatValue(price, "price")}</span>
+      {isLarge && (
+        <span className="card-item__price">{formatValue(price, 'price')}</span>
       )}
 
       <Link
         className="card-item__link"
         to={productPath}
-        state={{ from: location }}
+        state={{ from: getLocationState(location) }}
       >
         <h3 className="card-item__title">
           <span>{title}</span>

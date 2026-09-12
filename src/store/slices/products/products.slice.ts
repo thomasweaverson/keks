@@ -1,20 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { TProductsState } from "../../../types/state";
-import { NameSpace } from "../../../const/infrastructure";
+import { createSlice } from '@reduxjs/toolkit';
+import type { TProductsState } from '../../../types/state';
+import { LoadingStatus, NameSpace } from '../../../const/infrastructure';
 import {
   clearAllFavoritesAction,
   fetchProductsAction,
   removeFromFavoritesAction,
   setIsFavoriteAction,
-} from "../../api-actions";
-import { resetFavorites } from "../favorites/favorites.slice";
-import { getRandomThree } from "../../../pages/main-page/utils";
+} from '../../api-actions';
+import { resetFavorites } from '../favorites/favorites.slice';
+import { getRandomThree } from '../../../pages/main-page/utils';
 
 const initialState: TProductsState = {
   products: [],
-  isProductsLoading: true,
-  isProductsLoadingError: false,
-  isProductsLoaded: false,
+  productsLoadingStatus: LoadingStatus.Idle,
   randomPack: null,
 };
 
@@ -25,56 +23,57 @@ export const productsSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchProductsAction.pending, (state) => {
-        state.isProductsLoading = true;
-        state.isProductsLoadingError = false;
+        state.productsLoadingStatus = LoadingStatus.Loading;
       })
       .addCase(fetchProductsAction.fulfilled, (state, action) => {
         state.products = action.payload;
-        state.isProductsLoading = false;
-        state.isProductsLoadingError = false;
-        state.isProductsLoaded = true;
+        state.productsLoadingStatus = LoadingStatus.Loaded;
 
         state.randomPack = getRandomThree(action.payload);
       })
       .addCase(fetchProductsAction.rejected, (state) => {
         state.products = [];
-        state.isProductsLoading = false;
-        state.isProductsLoadingError = true;
-        state.isProductsLoaded = false;
+        state.productsLoadingStatus = LoadingStatus.Failed;
       })
       .addCase(setIsFavoriteAction.fulfilled, (state, action) => {
         const newFavoriteProduct = action.payload;
-        const index = state.products.findIndex(
+
+        const productIndex = state.products.findIndex(
           (product) => product.id === newFavoriteProduct.id,
         );
-        if (index !== -1) {
-          state.products[index].isFavorite = true;
+
+        if (productIndex !== -1) {
+          state.products[productIndex].isFavorite = true;
         }
 
         if (state.randomPack !== null) {
-          const index = state.randomPack.findIndex(
+          const randomPackIndex = state.randomPack.findIndex(
             (product) => product.id === newFavoriteProduct.id,
           );
-          if (index !== -1) {
-            state.randomPack[index].isFavorite = true;
+
+          if (randomPackIndex !== -1) {
+            state.randomPack[randomPackIndex].isFavorite = true;
           }
         }
       })
       .addCase(removeFromFavoritesAction.fulfilled, (state, action) => {
         const notFavoriteProduct = action.payload;
-        const index = state.products.findIndex(
+
+        const productIndex = state.products.findIndex(
           (product) => product.id === notFavoriteProduct.id,
         );
-        if (index !== -1) {
-          state.products[index].isFavorite = false;
+
+        if (productIndex !== -1) {
+          state.products[productIndex].isFavorite = false;
         }
 
         if (state.randomPack !== null) {
-          const index = state.randomPack.findIndex(
+          const randomPackIndex = state.randomPack.findIndex(
             (product) => product.id === notFavoriteProduct.id,
           );
-          if (index !== -1) {
-            state.randomPack[index].isFavorite = false;
+
+          if (randomPackIndex !== -1) {
+            state.randomPack[randomPackIndex].isFavorite = false;
           }
         }
       })

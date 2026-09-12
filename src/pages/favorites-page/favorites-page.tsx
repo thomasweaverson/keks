@@ -1,18 +1,19 @@
-import { Helmet } from "react-helmet-async";
-import BackLink from "../../components/back-link/back-link";
-import CatalogList from "../../components/catalog-list/catalog-list";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearAllFavoritesAction } from "../../store/api-actions";
+import { Helmet } from 'react-helmet-async';
+import BackLink from '../../components/back-link/back-link';
+import CatalogList from '../../components/catalog-list/catalog-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { clearAllFavoritesAction } from '../../store/api-actions';
 import {
   getFavorites,
   getFavoritesCount,
+  getFavoritesLoadingStatus,
   getFavoritesTotalPrice,
-  getIsFavoritesLoadingError,
-} from "../../store/slices/favorites/favorites.selectors";
-import EmptyFavorites from "./empty-favorites/empty-favorites";
-import Summary from "./summary/summary";
-import ErrorPage from "../error-page/error-page";
-import { getIsProductsLoadingError } from "../../store/slices/products/products.selectors";
+} from '../../store/slices/favorites/favorites.selectors';
+import EmptyFavorites from './empty-favorites/empty-favorites';
+import Summary from './summary/summary';
+import ErrorPage from '../error-page/error-page';
+import { getProductsLoadingStatus } from '../../store/slices/products/products.selectors';
+import { LoadingStatus } from '../../const/infrastructure';
 
 const FavoritesPage = () => {
   const dispatch = useAppDispatch();
@@ -21,11 +22,15 @@ const FavoritesPage = () => {
   const favoritesCount = useAppSelector(getFavoritesCount);
   const totalPrice = useAppSelector(getFavoritesTotalPrice);
 
-  const isProductsLoadingError = useAppSelector(getIsProductsLoadingError);
-  const isFavoritesLoadingError = useAppSelector(getIsFavoritesLoadingError);
+  const productsLoadingStatus = useAppSelector(getProductsLoadingStatus);
+  const isProductsLoadingError = productsLoadingStatus === LoadingStatus.Failed;
+
+  const favoritesLoadingStatus = useAppSelector(getFavoritesLoadingStatus);
+  const isFavoritesLoadingError =
+    favoritesLoadingStatus === LoadingStatus.Failed;
 
   const handleClearButtonClick = () => {
-    dispatch(clearAllFavoritesAction());
+    void dispatch(clearAllFavoritesAction());
   };
 
   const isEmpty = favoritesCount === 0;

@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 import {
   AuthorizationStatus,
   NameSpace,
   RegistrationStatus,
-} from "../../../const/infrastructure";
-import type { TUserState } from "../../../types/state";
+} from '../../../const/infrastructure';
+import type { TUserState } from '../../../types/state';
 import {
   authorizeUserAction,
   checkAuthAction,
   logoutAction,
   registerUserAction,
-} from "../../api-actions";
+} from '../../api-actions';
 
 const initialState: TUserState = {
   authorizationStatus: AuthorizationStatus.Unknown,

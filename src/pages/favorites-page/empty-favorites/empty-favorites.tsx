@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
-import { AppRoute } from "../../../const/infrastructure";
+import { Link, useLocation } from 'react-router-dom';
+import { AppRoute } from '../../../const/infrastructure';
+import { getLocationState } from '../../../utils/common';
 
 const EmptyFavorites = () => {
   const location = useLocation();
@@ -10,7 +11,7 @@ const EmptyFavorites = () => {
         <div className="empty-favorites__bg-wrapper">
           <div className="empty-favorites__wrapper">
             <svg width="944" height="707" aria-hidden="true">
-              <use href="#icon-empty-favorites-cloud"></use>
+              <use href="#icon-empty-favorites-cloud" />
             </svg>
             <div className="empty-favorites__content">
               <p className="empty-favorites__text">
@@ -20,7 +21,7 @@ const EmptyFavorites = () => {
                 <Link
                   className="btn"
                   to={AppRoute.Catalog}
-                  state={{ from: location }}
+                  state={{ from: getLocationState(location) }}
                 >
                   К кексам
                 </Link>

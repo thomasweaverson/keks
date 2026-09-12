@@ -1,21 +1,21 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { NameSpace } from "../../../const/infrastructure";
-import type { TState } from "../../../types/state";
-import { filterReviews, sortReviews } from "./utils";
+import { createSelector } from '@reduxjs/toolkit';
+import { NameSpace } from '../../../const/infrastructure';
+import type { TState } from '../../../types/state';
+import { filterReviews, sortReviews } from './utils';
 
 export const getReviews = (state: Pick<TState, typeof NameSpace.Reviews>) =>
   state[NameSpace.Reviews].reviews;
 
-export const getIsReviewsLoading = (
+export const getReviewsLoadingStatus = (
   state: Pick<TState, typeof NameSpace.Reviews>,
-) => state[NameSpace.Reviews].isReviewsLoading;
-
-export const getIsReviewsLoadingError = (
-  state: Pick<TState, typeof NameSpace.Reviews>,
-) => state[NameSpace.Reviews].isReviewsLoadingError;
+) => state[NameSpace.Reviews].reviewsLoadingStatus;
 
 export const getLastReview = (state: Pick<TState, typeof NameSpace.Reviews>) =>
   state[NameSpace.Reviews].lastReview;
+
+export const getLastReviewLoadingStatus = (
+  state: Pick<TState, typeof NameSpace.Reviews>,
+) => state[NameSpace.Reviews].lastReviewLoadingStatus;
 
 export const getCurrentReviewsFilter = (
   state: Pick<TState, typeof NameSpace.Reviews>,

@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useAppDispatch } from ".";
-import { resetProduct } from "../store/slices/product/product.slice";
-import { fetchProductAction, fetchReviewsAction } from "../store/api-actions";
-import { resetReviews } from "../store/slices/reviews/reviews.slice";
-import type { TProduct } from "../types/product";
+import { useEffect } from 'react';
+import { useAppDispatch } from '.';
+import { resetProduct } from '../store/slices/product/product.slice';
+import { fetchProductAction, fetchReviewsAction } from '../store/api-actions';
+import { resetReviews } from '../store/slices/reviews/reviews.slice';
+import type { TProduct } from '../types/product';
 
-const useProductData = (id: TProduct["id"] | undefined) => {
+const useProductData = (id: TProduct['id'] | undefined) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -13,16 +13,17 @@ const useProductData = (id: TProduct["id"] | undefined) => {
       return;
     }
 
-    dispatch(fetchProductAction(id));
-    dispatch(fetchReviewsAction(id));
+    void dispatch(fetchProductAction(id));
+    void dispatch(fetchReviewsAction(id));
   }, [id, dispatch]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(resetProduct());
       dispatch(resetReviews());
-    };
-  }, [dispatch]);
+    },
+    [dispatch],
+  );
 };
 
 export default useProductData;

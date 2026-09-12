@@ -3,6 +3,4 @@ export type LoginFormValues = {
   password: string;
 };
 
-export type LoginFormErrors = Partial<
-  Record<keyof LoginFormValues, string>
->;
+export type LoginFormErrors = Partial<Record<keyof LoginFormValues, string>>;

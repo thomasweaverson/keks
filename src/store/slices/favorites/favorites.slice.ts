@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { TFavoritesState } from "../../../types/state";
-import { NameSpace } from "../../../const/infrastructure";
+import { createSlice } from '@reduxjs/toolkit';
+import type { TFavoritesState } from '../../../types/state';
+import { LoadingStatus, NameSpace } from '../../../const/infrastructure';
 import {
   clearAllFavoritesAction,
   fetchFavoritesAction,
   removeFromFavoritesAction,
   setIsFavoriteAction,
-} from "../../api-actions";
+} from '../../api-actions';
 
 const initialState: TFavoritesState = {
   favorites: [],
-  isFavoritesLoadingError: false,
+  favoritesLoadingStatus: LoadingStatus.Idle,
 };
 
 export const favoritesSlice = createSlice({
@@ -22,14 +22,14 @@ export const favoritesSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchFavoritesAction.pending, (state) => {
-        state.isFavoritesLoadingError = false;
+        state.favoritesLoadingStatus = LoadingStatus.Loading;
       })
       .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
-        state.isFavoritesLoadingError = false;
+        state.favoritesLoadingStatus = LoadingStatus.Loaded;
         state.favorites = action.payload;
       })
       .addCase(fetchFavoritesAction.rejected, (state) => {
-        state.isFavoritesLoadingError = true;
+        state.favoritesLoadingStatus = LoadingStatus.Failed;
       })
       .addCase(setIsFavoriteAction.fulfilled, (state, action) => {
         const isAlreadyFavorite = state.favorites.some(

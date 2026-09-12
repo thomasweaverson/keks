@@ -1,18 +1,20 @@
-import { useNavigate, type Location } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from ".";
-import type { TProduct } from "../types/product";
-import { getAuthorizationStatus } from "../store/slices/user/user.selectors";
-import { useState } from "react";
-import { AppRoute, AuthorizationStatus } from "../const/infrastructure";
-import { removeFromFavoritesAction, setIsFavoriteAction } from "../store/api-actions";
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '.';
+import { AppRoute, AuthorizationStatus } from '../const/infrastructure';
+import { removeFromFavoritesAction, setIsFavoriteAction } from '../store/api-actions';
+import { getAuthorizationStatus } from '../store/slices/user/user.selectors';
+import type { TProduct } from '../types/product';
+import { getLocationState } from '../utils/common';
 
 const useFavorite = (
-  productId: TProduct["id"],
+  productId: TProduct['id'],
   isFavorite: boolean,
-  location: Location
 ) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const [isPending, setIsPending] = useState(false);
@@ -23,8 +25,8 @@ const useFavorite = (
     }
 
     if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login, {
-        state: {from: location}
+      void navigate(AppRoute.Login, {
+        state: { from: getLocationState(location) },
       });
       return;
     }

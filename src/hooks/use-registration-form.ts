@@ -3,31 +3,31 @@ import {
   useState,
   type ChangeEvent,
   type SubmitEvent,
-} from "react";
+} from 'react';
 import type {
   RegistrationErrors,
   RegistrationFormValues,
-} from "../pages/registration-page/registration-form/types";
-import { useAppDispatch } from ".";
+} from '../pages/registration-page/registration-form/types';
+import { useAppDispatch } from '.';
 import {
   validateAvatar,
   validateEmail,
   validateForm,
   validateName,
   validatePassword,
-} from "../pages/registration-page/registration-form/utils";
-import { registerUserAction } from "../store/api-actions";
-import { toast } from "react-toastify";
+} from '../pages/registration-page/registration-form/utils';
+import { registerUserAction } from '../store/api-actions';
+import { toast } from 'react-toastify';
 
-const REGISTRATION_SUCCESS_MESSAGE = "Регистрация выполнена успешно";
+const REGISTRATION_SUCCESS_MESSAGE = 'Регистрация выполнена успешно';
 
 const AVATAR_ERROR_MESSAGE =
-  "Регистрация выполнена успешно, но аватар не удалось загрузить";
+  'Регистрация выполнена успешно, но аватар не удалось загрузить';
 
 const INITIAL_VALUES: RegistrationFormValues = {
-  name: "",
-  email: "",
-  password: "",
+  name: '',
+  email: '',
+  password: '',
   avatar: null,
 };
 
@@ -49,14 +49,14 @@ export const useRegistrationForm = () => {
 
     const fieldName = name as keyof RegistrationFormValues;
 
-    const nextValue = fieldName === "avatar" ? (files?.[0] ?? null) : value;
+    const nextValue = fieldName === 'avatar' ? (files?.[0] ?? null) : value;
 
     setValues((current) => ({
       ...current,
       [fieldName]: nextValue,
     }));
 
-    if (fieldName === "name") {
+    if (fieldName === 'name') {
       const error = validateName(value);
 
       setErrors((current) => ({
@@ -65,7 +65,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === "email") {
+    if (fieldName === 'email') {
       const error = validateEmail(value);
 
       setErrors((current) => ({
@@ -74,7 +74,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === "password") {
+    if (fieldName === 'password') {
       const error = validatePassword(value);
 
       setErrors((current) => ({
@@ -83,7 +83,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === "avatar") {
+    if (fieldName === 'avatar') {
       const file = files?.[0] ?? null;
 
       setErrors((current) => ({

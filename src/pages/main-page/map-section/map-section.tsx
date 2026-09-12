@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Locations } from "../../const/contacts";
-import type { TLocation } from "../../types/business";
-import ContactsList from "./contacts-list/contacts-list";
-import Map from "./map/map";
+import { useState } from 'react';
+import ContactsList from './contacts-list/contacts-list';
+import Map from './map/map';
+import type { TLocation } from '../../../types/business';
+import { Locations } from '../../../const/contacts';
 
-const WidgetMap = () => {
+const MapSection = () => {
   const [activeLocation, setActiveLocation] = useState<TLocation>(
     Locations.Confectionery1,
   );
@@ -25,4 +25,4 @@ const WidgetMap = () => {
   );
 };
 
-export default WidgetMap;
+export default MapSection;

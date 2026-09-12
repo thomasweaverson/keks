@@ -1,8 +1,8 @@
-import clsx from "clsx";
-import styles from "./review-form.module.css";
-import RatingInput from "./rating-input/rating-input";
-import ReviewTextInput from "./review-text-input/review-text-input";
-import { useReviewForm } from "../../../hooks/use-review-form";
+import clsx from 'clsx';
+import styles from './review-form.module.css';
+import RatingInput from './rating-input/rating-input';
+import ReviewTextInput from './review-text-input/review-text-input';
+import { useReviewForm } from '../../../hooks/use-review-form';
 
 type TReviewFormProps = {
   productId: string;
@@ -37,7 +37,7 @@ const ReviewForm = ({ productId }: TReviewFormProps) => {
                   placeholder="Достоинства"
                   value={values.positive}
                   error={errors.positive}
-                  onChange={(value) => handleTextChange("positive", value)}
+                  onChange={(value) => handleTextChange('positive', value)}
                 />
 
                 <ReviewTextInput
@@ -45,13 +45,13 @@ const ReviewForm = ({ productId }: TReviewFormProps) => {
                   placeholder="Недостатки"
                   value={values.negative}
                   error={errors.negative}
-                  onChange={(value) => handleTextChange("negative", value)}
+                  onChange={(value) => handleTextChange('negative', value)}
                 />
               </div>
 
               <div className="review-form__submit-wrapper">
                 <div
-                  className={clsx("review-form__rating-wrapper", styles.field)}
+                  className={clsx('review-form__rating-wrapper', styles.field)}
                 >
                   <RatingInput
                     value={values.rating}
@@ -65,8 +65,8 @@ const ReviewForm = ({ productId }: TReviewFormProps) => {
 
                 <div className="review-form__button-wrapper">
                   <button
-                    className={clsx("btn", "review-form__button", {
-                      "is-disabled": isSubmitting,
+                    className={clsx('btn', 'review-form__button', {
+                      'is-disabled': isSubmitting,
                     })}
                     type="submit"
                     disabled={isSubmitting}
