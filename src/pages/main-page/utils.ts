@@ -1,4 +1,4 @@
-export const getRandomThree = <T>(arr: T[]): [T, T, T] | null => {
+export const getRandomThreeElements = <T>(arr: T[]): [T, T, T] | null => {
   if (arr.length < 3) {
     return null;
   }

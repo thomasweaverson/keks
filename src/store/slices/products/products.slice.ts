@@ -8,7 +8,7 @@ import {
   setIsFavoriteAction,
 } from '../../api-actions';
 import { resetFavorites } from '../favorites/favorites.slice';
-import { getRandomThree } from '../../../pages/main-page/utils';
+import { getRandomThreeElements } from '../../../pages/main-page/utils';
 
 const initialState: TProductsState = {
   products: [],
@@ -29,7 +29,7 @@ export const productsSlice = createSlice({
         state.products = action.payload;
         state.productsLoadingStatus = LoadingStatus.Loaded;
 
-        state.randomPack = getRandomThree(action.payload);
+        state.randomPack = getRandomThreeElements(action.payload);
       })
       .addCase(fetchProductsAction.rejected, (state) => {
         state.products = [];
