@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import { memo, type ChangeEventHandler, type FocusEventHandler } from 'react';
 import styles from './form-field.module.css';
 
 type TFormFieldProps = {
@@ -69,4 +69,4 @@ const FormField = ({
   );
 };
 
-export default FormField;
+export default memo(FormField);

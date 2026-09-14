@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { LoadingStatus } from '../../../const/infrastructure';
 import { useAppSelector } from '../../../hooks';
 import {
@@ -39,4 +40,4 @@ const ProductReviews = () => {
   );
 };
 
-export default ProductReviews;
+export default memo(ProductReviews);

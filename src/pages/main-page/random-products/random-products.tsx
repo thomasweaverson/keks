@@ -1,16 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
-import type { TProduct } from '../../../types/product';
 import Card from '../../../components/card/card';
 import { AppRoute } from '../../../const/infrastructure';
 import { getLocationState } from '../../../utils/common';
+import { useAppSelector } from '../../../hooks';
+import { getRandomPack } from '../../../store/slices/products/products.selectors';
 
-type TRandomProductsProps = {
-  products: [TProduct, TProduct, TProduct] | null;
-};
-const RandomProducts = ({ products }: TRandomProductsProps) => {
+
+const RandomProducts = () => {
   const location = useLocation();
+  const randomProducts = useAppSelector(getRandomPack);
 
-  if (!products) {
+  if (!randomProducts) {
     return null;
   }
 
@@ -19,7 +19,7 @@ const RandomProducts = ({ products }: TRandomProductsProps) => {
       <div className="container">
         <h2 className="random-main__title">кексы</h2>
         <ul className="random-main__list">
-          {products.map((product) => (
+          {randomProducts.map((product) => (
             <li key={product.id} className="random-main__item">
               <Card product={product} />
             </li>

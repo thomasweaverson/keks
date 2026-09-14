@@ -5,6 +5,7 @@ import useFavorite from '../../hooks/use-favorite';
 import { AppRoute } from '../../const/infrastructure';
 import type { TProduct } from '../../types/product';
 import { formatValue, getLocationState } from '../../utils/common';
+import { memo } from 'react';
 
 type TCardProps = {
   product: TProduct;
@@ -41,12 +42,7 @@ const Card = ({ product, isLarge = false }: TCardProps) => {
         <div className="card-item__img-wrapper">
           <picture>
             <source type="image/webp" srcSet={previewImageWebp} />
-            <img
-              src={previewImage}
-              width="241"
-              height="245"
-              alt={title}
-            />
+            <img src={previewImage} width="241" height="245" alt={title} />
           </picture>
         </div>
         {isNew && <span className="card-item__label">Новинка</span>}
@@ -84,4 +80,4 @@ const Card = ({ product, isLarge = false }: TCardProps) => {
   );
 };
 
-export default Card;
+export default memo(Card);

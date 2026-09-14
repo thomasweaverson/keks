@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { memo, type MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const/infrastructure';
 import { isLocationState } from '../../utils/guards/router';
@@ -39,4 +39,4 @@ const BackLink = () => {
   );
 };
 
-export default BackLink;
+export default memo(BackLink);

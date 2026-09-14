@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   AuthorizationStatus,
   LoadingStatus,
@@ -47,4 +48,4 @@ const ProductPageTitle = () => {
   );
 };
 
-export default ProductPageTitle;
+export default memo(ProductPageTitle);
