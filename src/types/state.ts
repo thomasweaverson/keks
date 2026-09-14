@@ -20,13 +20,13 @@ export type TState = ReturnType<typeof store.getState>;
 
 export type TAppDispatch = typeof store.dispatch;
 
+export type TAppExtra = {
+  api: AxiosInstance;
+};
+
 export type TCustomServerError = {
   status: number;
   message: string;
-};
-
-export type TAppExtra = {
-  api: AxiosInstance;
 };
 
 export type TAppThunkConfig = {
