@@ -11,6 +11,7 @@ const HeaderLogo = () => {
       width="170"
       height="69"
       alt="Кондитерская кекс"
+      data-testid="logo-image"
     />
   );
 

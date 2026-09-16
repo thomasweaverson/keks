@@ -1,5 +1,5 @@
-import type { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import type { ReactElement, ReactNode } from 'react';
+import { MemoryRouter, type InitialEntry } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
@@ -10,8 +10,8 @@ import type { TState } from '../../types/state';
 import { createAPI } from '../../services/api';
 
 export function withHistory(
-  component: ReactElement,
-  initialEntries: string[] = ['/'],
+  component: ReactNode,
+  initialEntries: InitialEntry[] = ['/'],
 ) {
   return (
     <MemoryRouter initialEntries={initialEntries}>
@@ -44,7 +44,7 @@ function createMockStore(
 }
 
 export function withStore(
-  component: ReactElement,
+  component: ReactNode,
   initialState: Partial<TState> = {},
 ): ComponentWithMockStore {
   const axios = createAPI();

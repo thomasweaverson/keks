@@ -1,145 +1,162 @@
-// import { render, screen } from '@testing-library/react';
-// import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-// import ProtectedRoute from './protected-route';
-// import { withStore } from '../../utils/mock-component';
-// import { makeFakeStore } from '../../utils/mocks';
-// import { AppRoute } from '../../const/infrastructure';
-// import type { UserData } from '../../types/user-data';
+import ProtectedRoute from './protected-route';
+import type { TUserInfo } from '../../types/user';
+import { describe, expect, it } from 'vitest';
+import { withStore } from '../../utils/testing/mock-components';
+import { makeFakeState, makeFakeUserInfo } from '../../utils/testing/mocks';
 
-// const fakeUser: UserData = {
-//   name: 'Thomas',
-//   email: 'thomas@test.com',
-//   token: 'token',
-//   avatarUrl: 'avatar.jpg',
-//   isPro: false,
-// };
+import {
+  AppRoute,
+  AuthorizationStatus,
+  RegistrationStatus,
+} from '../../const/infrastructure';
 
-// const PrivatePage = () => <div>Private page</div>;
-// const LoginPage = () => <div>Login page</div>;
-// const PublicPage = () => <div>Public page</div>;
+const fakeUser: TUserInfo = makeFakeUserInfo();
 
-// describe('Component: ProtectedRoute', () => {
-//   it('should render children for authorized user', () => {
-//     const { withStoreComponent } = withStore(
-//       <ProtectedRoute>
-//         <PrivatePage />
-//       </ProtectedRoute>,
-//       makeFakeStore({
-//         User: {
-//           userInfo: fakeUser,
-//           authorizationStatus: 'AUTH',
-//         },
-//       }),
-//     );
+const PrivatePage = () => <div>Private page</div>;
+const LoginPage = () => <div>Login page</div>;
+const PublicPage = () => <div>Public page</div>;
 
-//     render(<MemoryRouter>{withStoreComponent}</MemoryRouter>);
+describe('Component: ProtectedRoute', () => {
+  it('should render children for authorized user', () => {
+    const { withStoreComponent } = withStore(
+      <ProtectedRoute>
+        <PrivatePage />
+      </ProtectedRoute>,
+      makeFakeState({
+        User: {
+          userInfo: fakeUser,
+          authorizationStatus: AuthorizationStatus.Auth,
+          isAvatarLoadingError: false,
+          registrationStatus: RegistrationStatus.Success,
+        },
+      }),
+    );
 
-//     expect(screen.getByText('Private page')).toBeInTheDocument();
-//   });
+    render(<MemoryRouter>{withStoreComponent}</MemoryRouter>);
 
-//   it('should redirect unauthorized user to login page', () => {
-//     const { withStoreComponent } = withStore(
-//       <ProtectedRoute>
-//         <PrivatePage />
-//       </ProtectedRoute>,
-//       makeFakeStore({
-//         User: {
-//           userInfo: null,
-//           authorizationStatus: 'NO_AUTH',
-//         },
-//       }),
-//     );
+    expect(screen.getByText('Private page')).toBeInTheDocument();
+  });
 
-//     render(
-//       <MemoryRouter initialEntries={[AppRoute.Root]}>
-//         <Routes>
-//           <Route path={AppRoute.Root} element={withStoreComponent} />
-//           <Route path={AppRoute.Login} element={<LoginPage />} />
-//         </Routes>
-//       </MemoryRouter>,
-//     );
+  it('should redirect unauthorized user to login page', () => {
+    const { withStoreComponent } = withStore(
+      <ProtectedRoute>
+        <PrivatePage />
+      </ProtectedRoute>,
+      makeFakeState({
+        User: {
+          userInfo: fakeUser,
+          authorizationStatus: AuthorizationStatus.NoAuth,
+          isAvatarLoadingError: false,
+          registrationStatus: RegistrationStatus.Idle,
+        },
+      }),
+    );
 
-//     expect(screen.getByText('Login page')).toBeInTheDocument();
-//   });
+    render(
+      <MemoryRouter initialEntries={[AppRoute.Root]}>
+        <Routes>
+          <Route path={AppRoute.Root} element={withStoreComponent} />
+          <Route path={AppRoute.Login} element={<LoginPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-//   it('should redirect authorized user from no-auth route', () => {
-//     const { withStoreComponent } = withStore(
-//       <ProtectedRoute onlyNoAuth>
-//         <PublicPage />
-//       </ProtectedRoute>,
-//       makeFakeStore({
-//         User: {
-//           userInfo: fakeUser,
-//           authorizationStatus: 'AUTH',
-//         },
-//       }),
-//     );
+    expect(screen.getByText('Login page')).toBeInTheDocument();
+  });
 
-//     render(
-//       <MemoryRouter initialEntries={[AppRoute.Login]}>
-//         <Routes>
-//           <Route path={AppRoute.Login} element={withStoreComponent} />
-//           <Route path={AppRoute.Root} element={<PrivatePage />} />
-//         </Routes>
-//       </MemoryRouter>,
-//     );
+  it('should redirect authorized user from guest-only route', () => {
+    const { withStoreComponent } = withStore(
+      <ProtectedRoute guestOnly>
+        <PublicPage />
+      </ProtectedRoute>,
+      makeFakeState({
+        User: {
+          userInfo: fakeUser,
+          authorizationStatus: AuthorizationStatus.Auth,
+          isAvatarLoadingError: false,
+          registrationStatus: RegistrationStatus.Success,
+        },
+      }),
+    );
 
-//     expect(screen.getByText('Private page')).toBeInTheDocument();
-//   });
+    render(
+      <MemoryRouter initialEntries={[AppRoute.Login]}>
+        <Routes>
+          <Route path={AppRoute.Login} element={withStoreComponent} />
+          <Route path={AppRoute.Root} element={<PrivatePage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-//   it('should render children for unauthorized user on no-auth route', () => {
-//     const { withStoreComponent } = withStore(
-//       <ProtectedRoute onlyNoAuth>
-//         <PublicPage />
-//       </ProtectedRoute>,
-//       makeFakeStore({
-//         User: {
-//           userInfo: null,
-//           authorizationStatus: 'NO_AUTH',
-//         },
-//       }),
-//     );
+    expect(screen.getByText('Private page')).toBeInTheDocument();
+  });
 
-//     render(
-//       <MemoryRouter initialEntries={[AppRoute.Login]}>
-//         <Routes>
-//           <Route path={AppRoute.Login} element={withStoreComponent} />
-//         </Routes>
-//       </MemoryRouter>,
-//     );
+  it('should render children for unauthorized user on no-auth route', () => {
+    const { withStoreComponent } = withStore(
+      <ProtectedRoute guestOnly>
+        <PublicPage />
+      </ProtectedRoute>,
+      makeFakeState({
+        User: {
+          userInfo: fakeUser,
+          authorizationStatus: AuthorizationStatus.NoAuth,
+          isAvatarLoadingError: false,
+          registrationStatus: RegistrationStatus.Idle,
+        },
+      }),
+    );
 
-//     expect(screen.getByText('Public page')).toBeInTheDocument();
-//   });
+    render(
+      <MemoryRouter initialEntries={[AppRoute.Login]}>
+        <Routes>
+          <Route path={AppRoute.Login} element={withStoreComponent} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-//   it('should redirect authorized user to previous page from location.state', () => {
-//     const previousLocation = { pathname: '/favorites' };
+    expect(screen.getByText('Public page')).toBeInTheDocument();
+  });
 
-//     const { withStoreComponent } = withStore(
-//       <ProtectedRoute onlyNoAuth>
-//         <PublicPage />
-//       </ProtectedRoute>,
-//       makeFakeStore({
-//         User: {
-//           userInfo: fakeUser,
-//           authorizationStatus: 'AUTH',
-//         },
-//       }),
-//     );
+  it('should redirect authorized user to previous page from location.state', () => {
+    const previousLocation = {
+      pathname: '/favorites',
+      search: '',
+      hash: '',
+    };
 
-//     render(
-//       <MemoryRouter
-//         initialEntries={[
-//           { pathname: AppRoute.Login, state: { from: previousLocation } },
-//         ]}
-//       >
-//         <Routes>
-//           <Route path={AppRoute.Login} element={withStoreComponent} />
-//           <Route path="/favorites" element={<div>Favorites page</div>} />
-//         </Routes>
-//       </MemoryRouter>,
-//     );
+    const { withStoreComponent } = withStore(
+      <ProtectedRoute guestOnly>
+        <PublicPage />
+      </ProtectedRoute>,
+      makeFakeState({
+        User: {
+          userInfo: fakeUser,
+          authorizationStatus: AuthorizationStatus.Auth,
+          isAvatarLoadingError: false,
+          registrationStatus: RegistrationStatus.Success,
+        },
+      }),
+    );
 
-//     expect(screen.getByText('Favorites page')).toBeInTheDocument();
-//   });
-// });
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: AppRoute.Login,
+            state: { from: previousLocation },
+          },
+        ]}
+      >
+        <Routes>
+          <Route path={AppRoute.Login} element={withStoreComponent} />
+          <Route path="/favorites" element={<div>Favorites page</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText('Favorites page')).toBeInTheDocument();
+  });
+});

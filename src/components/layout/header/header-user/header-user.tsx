@@ -27,6 +27,7 @@ const HeaderUser = () => {
                 width="62"
                 height="62"
                 alt=""
+                data-testid="avatar-image"
               />
             </picture>
           </div>

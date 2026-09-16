@@ -38,6 +38,7 @@ const Card = ({ product, isLarge = false }: TCardProps) => {
         className="card-item__img-link"
         to={productPath}
         state={{ from: getLocationState(location) }}
+        data-testid="product-card-link"
       >
         <div className="card-item__img-wrapper">
           <picture>

@@ -1,6 +1,6 @@
 import type { Location } from 'react-router-dom';
 
-import type { TLocationState } from '../../types/infrastructure';
+import type { TLocationState, TRouteHandle } from '../../types/infrastructure';
 
 const isLocation = (
   value: unknown,
@@ -14,10 +14,38 @@ const isLocation = (
   'hash' in value &&
   typeof value.hash === 'string';
 
-export const isLocationState = (
-  state: unknown,
-): state is TLocationState =>
-  typeof state === 'object' &&
-  state !== null &&
-  'from' in state &&
-  isLocation(state.from);
+export const isLocationState = (state: unknown): state is TLocationState => {
+  if (typeof state !== 'object' || state === null) {
+    return false;
+  }
+
+  if (!('from' in state)) {
+    return true;
+  }
+
+  return state.from === undefined || isLocation(state.from);
+};
+
+export const isRouteHandle = (value: unknown): value is TRouteHandle => {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  if ('hideHeader' in value) {
+    const { hideHeader } = value;
+
+    if (hideHeader !== undefined && typeof hideHeader !== 'boolean') {
+      return false;
+    }
+  }
+
+  if ('hideFooter' in value) {
+    const { hideFooter } = value;
+
+    if (hideFooter !== undefined && typeof hideFooter !== 'boolean') {
+      return false;
+    }
+  }
+
+  return true;
+};

@@ -24,8 +24,12 @@ const ReviewCard = ({ review, withBorder }: TReviewCardProps) => {
         <span className="review__author">Уважаемый(-ая) {user.name}</span>
         <StarRating rating={rating} />
         <div className="review__text-wrapper">
-          {positive && <p className="review__text">{positive}</p>}
-          {negative && <p className="review__text">{negative}</p>}
+          {positive && (
+            <p className="review__text" data-testid="review-text">
+              {positive}
+            </p>
+          )}
+          {negative && <p className="review__text" data-testid="review-text">{negative}</p>}
         </div>
         <div className="review__image-wrapper">
           <picture>
@@ -34,6 +38,7 @@ const ReviewCard = ({ review, withBorder }: TReviewCardProps) => {
               width="162"
               height="162"
               alt=""
+              data-testid="avatar-image"
             />
           </picture>
         </div>

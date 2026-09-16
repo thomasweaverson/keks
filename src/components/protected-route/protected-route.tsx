@@ -3,8 +3,8 @@ import { AppRoute, AuthorizationStatus } from '../../const/infrastructure';
 import { type PropsWithChildren } from 'react';
 import { getAuthorizationStatus } from '../../store/slices/user/user.selectors';
 import { useAppSelector } from '../../hooks';
-import type { TLocationState } from '../../types/infrastructure';
 import { getLocationState } from '../../utils/common';
+import { isLocationState } from '../../utils/guards/router';
 
 type TProtectedRouteProps = {
   guestOnly?: boolean;
@@ -15,7 +15,8 @@ const ProtectedRoute = ({
   guestOnly = false,
 }: PropsWithChildren<TProtectedRouteProps>) => {
   const location = useLocation();
-  const state = location.state as TLocationState | null;
+
+  const state = isLocationState(location.state) ? location.state : null;
 
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;

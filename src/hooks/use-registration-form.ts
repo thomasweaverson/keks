@@ -18,6 +18,7 @@ import {
 } from '../pages/registration-page/registration-form/utils';
 import { registerUserAction } from '../store/api-actions';
 import { toast } from 'react-toastify';
+import { isRegistrationField } from '../utils/guards/form';
 
 const REGISTRATION_SUCCESS_MESSAGE = 'Регистрация выполнена успешно';
 
@@ -47,16 +48,18 @@ export const useRegistrationForm = () => {
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
 
-    const fieldName = name as keyof RegistrationFormValues;
+    if (!isRegistrationField(name)) {
+      return;
+    }
 
-    const nextValue = fieldName === 'avatar' ? (files?.[0] ?? null) : value;
+    const nextValue = name === 'avatar' ? (files?.[0] ?? null) : value;
 
     setValues((current) => ({
       ...current,
-      [fieldName]: nextValue,
+      [name]: nextValue,
     }));
 
-    if (fieldName === 'name') {
+    if (name === 'name') {
       const error = validateName(value);
 
       setErrors((current) => ({
@@ -65,7 +68,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === 'email') {
+    if (name === 'email') {
       const error = validateEmail(value);
 
       setErrors((current) => ({
@@ -74,7 +77,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === 'password') {
+    if (name === 'password') {
       const error = validatePassword(value);
 
       setErrors((current) => ({
@@ -83,7 +86,7 @@ export const useRegistrationForm = () => {
       }));
     }
 
-    if (fieldName === 'avatar') {
+    if (name === 'avatar') {
       const file = files?.[0] ?? null;
 
       setErrors((current) => ({
@@ -102,11 +105,15 @@ export const useRegistrationForm = () => {
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
-      const fieldName = event.target.name as keyof RegistrationFormValues;
+      const { name } = event.target;
+
+      if (!isRegistrationField(name)) {
+        return;
+      }
 
       setTouched((current) => ({
         ...current,
-        [fieldName]: true,
+        [name]: true,
       }));
     },
     [],
