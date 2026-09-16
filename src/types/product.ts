@@ -48,3 +48,5 @@ export type TReviewPosting = {
   negative: TReview['negative'];
   rating: number;
 };
+
+export type TReviewFormValues = Omit<TReviewPosting, 'id'>;

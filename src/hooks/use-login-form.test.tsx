@@ -1,5 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FocusEvent, SubmitEvent } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -28,158 +27,183 @@ vi.mock('../pages/login-page/login-form/utils', () => ({
   validateForm: vi.fn(),
 }));
 
-const createChangeEvent = (name: string, value: string): ChangeEvent<HTMLInputElement> => {
-  const input = document.createElement('input');
-  input.name = name;
-  input.value = value;
-  return {
-    target: input,
-    currentTarget: input,
-  } as ChangeEvent<HTMLInputElement>;
+const LoginFormTest = () => {
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  } = useLoginForm();
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        aria-label="Email"
+        name="email"
+        value={values.email}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+
+      <input
+        aria-label="Password"
+        name="password"
+        value={values.password}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+
+      <button type="submit" disabled={isSubmitting}>
+        Войти
+      </button>
+
+      <output data-testid="email-error">{errors.email}</output>
+      <output data-testid="password-error">{errors.password}</output>
+      <output data-testid="email-touched">
+        {String(touched.email ?? false)}
+      </output>
+      <output data-testid="password-touched">
+        {String(touched.password ?? false)}
+      </output>
+    </form>
+  );
 };
 
-const createFocusEvent = (name: string): FocusEvent<HTMLInputElement> => {
-  const input = document.createElement('input');
-  input.name = name;
-  return {
-    target: input,
-    currentTarget: input,
-  } as FocusEvent<HTMLInputElement>;
-};
+const renderLoginForm = () => {
+  const { mockStore } = withStore(<LoginFormTest />);
 
-const createSubmitEvent = (preventDefault: () => void): SubmitEvent<HTMLFormElement> => {
-  const form = document.createElement('form');
-  return {
-    preventDefault,
-    target: form,
-    currentTarget: form,
-  } as SubmitEvent<HTMLFormElement>;
+  return render(
+    <Provider store={mockStore}>
+      <LoginFormTest />
+    </Provider>,
+  );
 };
 
 describe('Hook: useLoginForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(validateEmail).mockReturnValue(undefined);
+    vi.mocked(validatePassword).mockReturnValue(undefined);
+    vi.mocked(validateForm).mockReturnValue({});
   });
 
   it('initializes with default values', () => {
-    const { mockStore } = withStore(<></>);
+    renderLoginForm();
 
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
-    });
-
-    expect(result.current.values).toEqual({ email: '', password: '' });
-    expect(result.current.errors).toEqual({});
-    expect(result.current.touched).toEqual({});
-    expect(result.current.isSubmitting).toBe(false);
+    expect(screen.getByRole('textbox', { name: 'Email' })).toHaveValue('');
+    expect(screen.getByRole('textbox', { name: 'Password' })).toHaveValue('');
+    expect(screen.getByTestId('email-error')).toHaveTextContent('');
+    expect(screen.getByTestId('password-error')).toHaveTextContent('');
+    expect(screen.getByTestId('email-touched')).toHaveTextContent('false');
+    expect(screen.getByTestId('password-touched')).toHaveTextContent('false');
   });
 
-  it('updates values and validates email field on handleChange', () => {
+  it('updates email value and validates it on change', () => {
     vi.mocked(validateEmail).mockReturnValue('Неверный email');
 
-    const { mockStore } = withStore(<></>);
+    renderLoginForm();
 
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
+    const emailInput = screen.getByRole('textbox', { name: 'Email' });
+
+    fireEvent.change(emailInput, {
+      target: {
+        name: 'email',
+        value: 'invalid-email',
+      },
     });
 
-    const event = createChangeEvent('email', 'invalid-email');
-
-    act(() => {
-      result.current.handleChange(event);
-    });
-
-    expect(result.current.values.email).toBe('invalid-email');
-    expect(result.current.errors.email).toBe('Неверный email');
+    expect(emailInput).toHaveValue('invalid-email');
+    expect(screen.getByTestId('email-error')).toHaveTextContent(
+      'Неверный email',
+    );
     expect(validateEmail).toHaveBeenCalledWith('invalid-email');
   });
 
-  it('updates values and validates password field on handleChange', () => {
+  it('updates password value and validates it on change', () => {
     vi.mocked(validatePassword).mockReturnValue('Пароль слишком короткий');
 
-    const { mockStore } = withStore(<></>);
+    renderLoginForm();
 
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
+    const passwordInput = screen.getByRole('textbox', { name: 'Password' });
+
+    fireEvent.change(passwordInput, {
+      target: {
+        name: 'password',
+        value: '123',
+      },
     });
 
-    const event = createChangeEvent('password', '123');
-
-    act(() => {
-      result.current.handleChange(event);
-    });
-
-    expect(result.current.values.password).toBe('123');
-    expect(result.current.errors.password).toBe('Пароль слишком короткий');
+    expect(passwordInput).toHaveValue('123');
+    expect(screen.getByTestId('password-error')).toHaveTextContent(
+      'Пароль слишком короткий',
+    );
     expect(validatePassword).toHaveBeenCalledWith('123');
   });
 
-  it('marks field as touched on handleBlur', () => {
-    const { mockStore } = withStore(<></>);
+  it('marks field as touched on blur', () => {
+    renderLoginForm();
 
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
-    });
+    const emailInput = screen.getByRole('textbox', { name: 'Email' });
 
-    const event = createFocusEvent('email');
+    fireEvent.blur(emailInput);
 
-    act(() => {
-      result.current.handleBlur(event);
-    });
-
-    expect(result.current.touched).toEqual({ email: true });
+    expect(screen.getByTestId('email-touched')).toHaveTextContent('true');
+    expect(screen.getByTestId('password-touched')).toHaveTextContent('false');
   });
 
-  it('prevents dispatching action when form validation fails on handleSubmit', async () => {
-    vi.mocked(validateForm).mockReturnValue({ email: 'Обязательное поле' });
-
-    const { mockStore } = withStore(<></>);
-
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
+  it('prevents dispatching action when form validation fails', async () => {
+    vi.mocked(validateForm).mockReturnValue({
+      email: 'Обязательное поле',
     });
 
-    const preventDefault = vi.fn();
-    const event = createSubmitEvent(preventDefault);
+    renderLoginForm();
 
-    await act(async () => {
-      await result.current.handleSubmit(event);
+    fireEvent.submit(screen.getByRole('button'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('email-error')).toHaveTextContent(
+        'Обязательное поле',
+      );
     });
 
-    expect(preventDefault).toHaveBeenCalled();
-    expect(result.current.touched).toEqual({ email: true, password: true });
-    expect(result.current.errors).toEqual({ email: 'Обязательное поле' });
+    expect(screen.getByTestId('email-touched')).toHaveTextContent('true');
+    expect(screen.getByTestId('password-touched')).toHaveTextContent('true');
     expect(mockAuthorizeUserAction).not.toHaveBeenCalled();
   });
 
-  it('dispatches authorizeUserAction on handleSubmit when validation passes', async () => {
-    vi.mocked(validateForm).mockReturnValue({});
+  it('dispatches authorizeUserAction when validation passes', async () => {
+    renderLoginForm();
 
-    const { mockStore } = withStore(<></>);
 
-    const { result } = renderHook(() => useLoginForm(), {
-      wrapper: ({ children }) => <Provider store={mockStore}>{children}</Provider>,
+    const emailInput = screen.getByRole('textbox', { name: 'Email' });
+    const passwordInput = screen.getByRole('textbox', { name: 'Password' });
+
+    fireEvent.change(emailInput, {
+      target: {
+        name: 'email',
+        value: '  user@test.com  ',
+      },
     });
 
-    const changeEmailEvent = createChangeEvent('email', '  user@test.com  ');
-    const changePasswordEvent = createChangeEvent('password', 'secret123');
-
-    act(() => {
-      result.current.handleChange(changeEmailEvent);
-      result.current.handleChange(changePasswordEvent);
+    fireEvent.change(passwordInput, {
+      target: {
+        name: 'password',
+        value: 'secret123',
+      },
     });
 
-    const preventDefault = vi.fn();
-    const event = createSubmitEvent(preventDefault);
+    fireEvent.submit(screen.getByRole('button'));
 
-    await act(async () => {
-      await result.current.handleSubmit(event);
+    await waitFor(() => {
+      expect(mockAuthorizeUserAction).toHaveBeenCalledWith({
+        email: 'user@test.com',
+        password: 'secret123',
+      });
     });
 
-    expect(mockAuthorizeUserAction).toHaveBeenCalledWith({
-      email: 'user@test.com',
-      password: 'secret123',
-    });
-    expect(result.current.isSubmitting).toBe(false);
+    expect(screen.getByRole('button')).not.toBeDisabled();
   });
 });

@@ -7,22 +7,21 @@ import {
   POSITIVE_RATING_MIN,
   REVIEW_TEXT_MAX_LENGTH,
 } from '../pages/product-page/review-form/const';
-import type { TReviewPosting } from '../types/product';
+import type { TReviewFormValues } from '../types/product';
 import { postReviewAction } from '../store/api-actions';
+import { isReviewFormField } from '../utils/guards/form';
 
-type TFormValues = Omit<TReviewPosting, 'id'>;
+type TFormErrors = Partial<Record<keyof TReviewFormValues, string>>;
 
-type TFormErrors = Partial<Record<keyof TFormValues, string>>;
+type TTouchedFields = Partial<Record<keyof TReviewFormValues, boolean>>;
 
-type TTouchedFields = Partial<Record<keyof TFormValues, boolean>>;
-
-const initialValues: TFormValues = {
+const initialValues: TReviewFormValues = {
   positive: '',
   negative: '',
   rating: 0,
 };
 
-const validate = (values: TFormValues): TFormErrors => {
+const validate = (values: TReviewFormValues): TFormErrors => {
   const errors: TFormErrors = {};
 
   if (values.positive.length > REVIEW_TEXT_MAX_LENGTH) {
@@ -51,26 +50,28 @@ const validate = (values: TFormValues): TFormErrors => {
 export const useReviewForm = (productId: string) => {
   const dispatch = useAppDispatch();
 
-  const [values, setValues] = useState<TFormValues>(initialValues);
+  const [values, setValues] = useState<TReviewFormValues>(initialValues);
   const [errors, setErrors] = useState<TFormErrors>({});
   const [touched, setTouched] = useState<TTouchedFields>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateErrors = (
-    nextValues: TFormValues,
+    nextValues: TReviewFormValues,
     nextTouched: TTouchedFields = touched,
   ) => {
     const validationErrors = validate(nextValues);
 
     const visibleErrors: TFormErrors = {};
 
-    (Object.keys(validationErrors) as (keyof TFormValues)[]).forEach(
-      (field) => {
-        if (nextTouched[field]) {
-          visibleErrors[field] = validationErrors[field];
-        }
-      },
-    );
+    Object.keys(validationErrors).forEach((field) => {
+      if (!isReviewFormField(field)) {
+        return;
+      }
+
+      if (nextTouched[field]) {
+        visibleErrors[field] = validationErrors[field];
+      }
+    });
 
     setErrors(visibleErrors);
   };

@@ -15,6 +15,7 @@ import {
   validateForm,
   validatePassword,
 } from '../pages/login-page/login-form/utils';
+import { isLoginField } from '../utils/guards/form';
 
 const INITIAL_VALUES: LoginFormValues = {
   email: '',
@@ -25,25 +26,25 @@ export const useLoginForm = () => {
   const dispatch = useAppDispatch();
 
   const [values, setValues] = useState<LoginFormValues>(INITIAL_VALUES);
-
   const [errors, setErrors] = useState<LoginFormErrors>({});
-
   const [touched, setTouched] = useState<
     Partial<Record<keyof LoginFormValues, boolean>>
   >({});
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const field = name as keyof LoginFormValues;
+
+    if (!isLoginField(name)) {
+      return;
+    }
 
     setValues((current) => ({
       ...current,
-      [field]: value,
+      [name]: value,
     }));
 
-    if (field === 'email') {
+    if (name === 'email') {
       const emailError = validateEmail(value);
 
       setErrors((current) => ({
@@ -54,20 +55,25 @@ export const useLoginForm = () => {
       return;
     }
 
-    const error = validatePassword(value);
+    const passwordError = validatePassword(value);
 
     setErrors((current) => ({
       ...current,
-      password: error,
+      password: passwordError,
     }));
   }, []);
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
-      const field = event.target.name as keyof LoginFormValues;
+      const { name } = event.target;
+
+      if (!isLoginField(name)) {
+        return;
+      }
+
       setTouched((current) => ({
         ...current,
-        [field]: true,
+        [name]: true,
       }));
     },
     [],

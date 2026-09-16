@@ -1,5 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
-import type { SubmitEvent } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -17,23 +16,73 @@ vi.mock('../store/api-actions', () => ({
   postReviewAction: mockPostReviewAction,
 }));
 
-vi.mock('../pages/product-page/review-form/const', () => ({
-  MAX_RATING: 5,
-  MIN_RATING: 1,
-  NEGATIVE_RATING_MAX: 3,
-  POSITIVE_RATING_MIN: 4,
-  REVIEW_TEXT_MAX_LENGTH: 500,
-}));
+const ReviewFormTest = ({ productId }: { productId: string }) => {
+  const {
+    values,
+    errors,
+    isSubmitting,
+    handleTextChange,
+    handleRatingChange,
+    handleSubmit,
+  } = useReviewForm(productId);
 
-const createSubmitEvent = (
-  preventDefault: () => void,
-): SubmitEvent<HTMLFormElement> => {
-  const form = document.createElement('form');
-  return {
-    preventDefault,
-    target: form,
-    currentTarget: form,
-  } as SubmitEvent<HTMLFormElement>;
+  return (
+    <form onSubmit={handleSubmit}>
+      <textarea
+        aria-label="Достоинства"
+        value={values.positive}
+        onChange={(event) => handleTextChange('positive', event.target.value)}
+      />
+
+      <textarea
+        aria-label="Недостатки"
+        value={values.negative}
+        onChange={(event) => handleTextChange('negative', event.target.value)}
+      />
+
+      <button type="button" onClick={() => handleRatingChange(1)}>
+        1
+      </button>
+
+      <button type="button" onClick={() => handleRatingChange(2)}>
+        2
+      </button>
+
+      <button type="button" onClick={() => handleRatingChange(3)}>
+        3
+      </button>
+
+      <button type="button" onClick={() => handleRatingChange(4)}>
+        4
+      </button>
+
+      <button type="button" onClick={() => handleRatingChange(5)}>
+        5
+      </button>
+
+      <button type="submit" disabled={isSubmitting}>
+        Отправить
+      </button>
+
+      <output data-testid="positive-error">{errors.positive}</output>
+
+      <output data-testid="negative-error">{errors.negative}</output>
+
+      <output data-testid="rating-error">{errors.rating}</output>
+
+      <output data-testid="rating">{values.rating}</output>
+    </form>
+  );
+};
+
+const renderReviewForm = (productId = 'test-product-id') => {
+  const { mockStore } = withStore(<ReviewFormTest productId={productId} />);
+
+  return render(
+    <Provider store={mockStore}>
+      <ReviewFormTest productId={productId} />
+    </Provider>,
+  );
 };
 
 describe('Hook: useReviewForm', () => {
@@ -44,138 +93,131 @@ describe('Hook: useReviewForm', () => {
   });
 
   it('initializes with default values', () => {
-    const { mockStore } = withStore(<></>);
+    renderReviewForm(productId);
 
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
-    });
-
-    expect(result.current.values).toEqual({
-      positive: '',
-      negative: '',
-      rating: 0,
-    });
-    expect(result.current.errors).toEqual({});
-    expect(result.current.isSubmitting).toBe(false);
+    expect(screen.getByLabelText('Достоинства')).toHaveValue('');
+    expect(screen.getByLabelText('Недостатки')).toHaveValue('');
+    expect(screen.getByTestId('rating')).toHaveTextContent('0');
+    expect(screen.getByTestId('positive-error')).toHaveTextContent('');
+    expect(screen.getByTestId('negative-error')).toHaveTextContent('');
+    expect(screen.getByTestId('rating-error')).toHaveTextContent('');
+    expect(
+      screen.getByRole('button', { name: 'Отправить' }),
+    ).not.toBeDisabled();
   });
 
-  it('validates required positive text when high rating is selected', async () => {
-    const { mockStore } = withStore(<></>);
+  it('updates positive text and validates it', () => {
+    renderReviewForm(productId);
 
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
+    const positiveInput = screen.getByLabelText('Достоинства');
+
+    fireEvent.change(positiveInput, {
+      target: {
+        value: 'Отличный товар!',
+      },
     });
 
-    act(() => {
-      result.current.handleRatingChange(5);
-    });
-
-    expect(result.current.values.rating).toBe(5);
-
-    const preventDefault = vi.fn();
-
-    await act(async () => {
-      await result.current.handleSubmit(createSubmitEvent(preventDefault));
-    });
-
-    expect(result.current.errors.positive).toBe('Укажите достоинства товара');
+    expect(positiveInput).toHaveValue('Отличный товар!');
+    expect(screen.getByTestId('positive-error')).toHaveTextContent('');
   });
 
-  it('handles text input changes and validates required fields based on rating', () => {
-    const { mockStore } = withStore(<></>);
+  it('updates negative text and validates it for low rating', () => {
+    renderReviewForm(productId);
 
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
+    fireEvent.click(screen.getByRole('button', { name: '2' }));
+
+    const negativeInput = screen.getByLabelText('Недостатки');
+
+    fireEvent.change(negativeInput, {
+      target: {
+        value: 'Плохой звук',
+      },
     });
 
-    act(() => {
-      result.current.handleRatingChange(2);
-      result.current.handleTextChange('negative', 'Плохой звук');
-    });
+    expect(screen.getByTestId('rating')).toHaveTextContent('2');
+    expect(negativeInput).toHaveValue('Плохой звук');
+    expect(screen.getByTestId('negative-error')).toHaveTextContent('');
+  });
 
-    expect(result.current.values.negative).toBe('Плохой звук');
-    expect(result.current.errors.negative).toBeUndefined();
+  it('shows positive text error for high rating', () => {
+    renderReviewForm(productId);
+
+    fireEvent.click(screen.getByRole('button', { name: '5' }));
+    fireEvent.submit(screen.getByRole('button', { name: 'Отправить' }));
+
+    expect(screen.getByTestId('positive-error')).toHaveTextContent(
+      'Укажите достоинства товара',
+    );
+  });
+
+  it('shows negative text error for low rating', () => {
+    renderReviewForm(productId);
+
+    fireEvent.click(screen.getByRole('button', { name: '2' }));
+    fireEvent.submit(screen.getByRole('button', { name: 'Отправить' }));
+
+    expect(screen.getByTestId('negative-error')).toHaveTextContent(
+      'Укажите недостатки товара',
+    );
   });
 
   it('shows error when text exceeds maximum allowed length', () => {
-    const { mockStore } = withStore(<></>);
-
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
-    });
+    renderReviewForm(productId);
 
     const longText = 'a'.repeat(501);
 
-    act(() => {
-      result.current.handleTextChange('positive', longText);
+    fireEvent.change(screen.getByLabelText('Достоинства'), {
+      target: {
+        value: longText,
+      },
     });
 
-    expect(result.current.errors.positive).toBe('Максимум 500 символов');
+    expect(screen.getByTestId('positive-error')).toHaveTextContent(
+      'Максимум 500 символов',
+    );
   });
 
-  it('prevents submission when validation fails', async () => {
-    const { mockStore } = withStore(<></>);
+  it('prevents submission when validation fails', () => {
+    renderReviewForm(productId);
 
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
-    });
+    fireEvent.submit(screen.getByRole('button', { name: 'Отправить' }));
 
-    const preventDefault = vi.fn();
-
-    await act(async () => {
-      await result.current.handleSubmit(createSubmitEvent(preventDefault));
-    });
-
-    expect(preventDefault).toHaveBeenCalled();
-    expect(result.current.errors.rating).toBe('Выберите оценку');
+    expect(screen.getByTestId('rating-error')).toHaveTextContent(
+      'Выберите оценку',
+    );
     expect(mockPostReviewAction).not.toHaveBeenCalled();
   });
 
   it('dispatches postReviewAction and resets form on successful submit', async () => {
-    const { mockStore } = withStore(<></>);
+    renderReviewForm(productId);
 
-    const { result } = renderHook(() => useReviewForm(productId), {
-      wrapper: ({ children }) => (
-        <Provider store={mockStore}>{children}</Provider>
-      ),
+    fireEvent.click(screen.getByRole('button', { name: '5' }));
+
+    fireEvent.change(screen.getByLabelText('Достоинства'), {
+      target: {
+        value: 'Отличный товар!',
+      },
     });
 
-    act(() => {
-      result.current.handleRatingChange(5);
+    fireEvent.submit(screen.getByRole('button', { name: 'Отправить' }));
+
+    await waitFor(() => {
+      expect(mockPostReviewAction).toHaveBeenCalledWith({
+        id: productId,
+        positive: 'Отличный товар!',
+        negative: '',
+        rating: 5,
+      });
     });
 
-    act(() => {
-      result.current.handleTextChange('positive', 'Отличный товар!');
-    });
-
-    const preventDefault = vi.fn();
-
-    await act(async () => {
-      await result.current.handleSubmit(createSubmitEvent(preventDefault));
-    });
-
-    expect(mockPostReviewAction).toHaveBeenCalledWith({
-      id: productId,
-      positive: 'Отличный товар!',
-      negative: '',
-      rating: 5,
-    });
-    expect(result.current.values).toEqual({
-      positive: '',
-      negative: '',
-      rating: 0,
-    });
-    expect(result.current.errors).toEqual({});
-    expect(result.current.isSubmitting).toBe(false);
+    expect(screen.getByLabelText('Достоинства')).toHaveValue('');
+    expect(screen.getByLabelText('Недостатки')).toHaveValue('');
+    expect(screen.getByTestId('rating')).toHaveTextContent('0');
+    expect(screen.getByTestId('positive-error')).toHaveTextContent('');
+    expect(screen.getByTestId('negative-error')).toHaveTextContent('');
+    expect(screen.getByTestId('rating-error')).toHaveTextContent('');
+    expect(
+      screen.getByRole('button', { name: 'Отправить' }),
+    ).not.toBeDisabled();
   });
 });
