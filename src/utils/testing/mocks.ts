@@ -22,7 +22,11 @@ import {
 } from '../../const/business';
 import type { TUserInfo } from '../../types/user';
 
-export type AppThunkDispatch = ThunkDispatch<TState, AxiosInstance, Action>;
+export type AppThunkDispatch = ThunkDispatch<
+  TState,
+  { api: AxiosInstance },
+  Action
+>;
 
 export const extractActionsTypes = (actions: Action[]) =>
   actions.map(({ type }) => type);
@@ -65,7 +69,6 @@ export const makeFakeState = (initialState?: Partial<TState>): TState => ({
   ...(initialState ?? {}),
 });
 
-
 export const makeFakeProduct = (override?: Partial<TProduct>): TProduct => ({
   id: faker.string.uuid(),
   title: faker.commerce.productName(),
@@ -75,7 +78,19 @@ export const makeFakeProduct = (override?: Partial<TProduct>): TProduct => ({
     'shortbread',
     'dessert',
   ]),
-  type: faker.commerce.productAdjective(),
+  type: faker.helpers.arrayElement<TProductType>([
+    'basket-cake',
+    'brand-muffin',
+    'chocolate',
+    'chocolate-muffin',
+    'funnel-cake',
+    'honey-cake',
+    'lemon',
+    'new-york',
+    'tart',
+    'vanilla',
+    'vegetarian',
+  ]),
   price: Number(faker.commerce.price({ min: 100, max: 2000 })),
   previewImage: faker.image.url(),
   previewImageWebp: faker.image.url(),
@@ -83,6 +98,12 @@ export const makeFakeProduct = (override?: Partial<TProduct>): TProduct => ({
   isNew: faker.datatype.boolean(),
   ...override,
 });
+
+export const makeFakeRandomPack = (): [TProduct, TProduct, TProduct] => [
+  makeFakeProduct(),
+  makeFakeProduct(),
+  makeFakeProduct(),
+];
 
 export const makeFakeProductExtended = (
   override?: Partial<TProductExtended>,
@@ -129,7 +150,7 @@ export const makeFakeReviewPosting = (
 
 export const makeFakeCategoryWithTypes = (
   category: TProductCategory = 'cheesecake',
-  types: TProductType[] = ['classic'],
+  types: TProductType[] = ['lemon'],
 ): TCategoryWithTypes => ({
   category,
   types,

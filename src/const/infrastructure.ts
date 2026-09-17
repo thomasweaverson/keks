@@ -46,8 +46,8 @@ export const AppRoute = {
 } as const;
 
 export const LoadingStatus = {
-  Idle: 'idle',
-  Loading: 'loading',
-  Loaded: 'loaded',
-  Failed: 'failed',
+  Idle: 'IDLE',
+  Loading: 'LOADING',
+  Loaded: 'LOADED',
+  Failed: 'FAILED',
 } as const;

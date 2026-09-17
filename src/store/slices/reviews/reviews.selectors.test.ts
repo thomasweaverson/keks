@@ -99,10 +99,10 @@ describe('Reviews selectors', () => {
       lastReview: null,
       lastReviewLoadingStatus: LoadingStatus.Idle,
       currentReviewsFilter: DEFAULT_REVIEWS_FILTER,
-      currentReviewsSortOrder: 'oldest',
+      currentReviewsSortOrder: SortOrder.OLDEST,
     };
 
-    expect(getCurrentReviewsSortOrder({ Reviews: state })).toBe('oldest');
+    expect(getCurrentReviewsSortOrder({ Reviews: state })).toBe(SortOrder.OLDEST);
   });
 
   it('returns filtered and sorted reviews', () => {

@@ -14,8 +14,8 @@ import {
 describe('Filter selectors', () => {
   it('returns filters', () => {
     const filters = [
-      makeFakeCategoryWithTypes('cheesecake', ['classic', 'chocolate']),
-      makeFakeCategoryWithTypes('bisque', ['lemon']),
+      makeFakeCategoryWithTypes('cheesecake', ['lemon', 'chocolate']),
+      makeFakeCategoryWithTypes('bisque', ['vanilla']),
     ];
 
     const state: TFilterState = {
@@ -43,12 +43,12 @@ describe('Filter selectors', () => {
     const state: TFilterState = {
       filters: [],
       currentCategory: 'cheesecake',
-      currentTypes: ['classic', 'chocolate'],
+      currentTypes: ['lemon', 'chocolate'],
       filtersLoadingStatus: LoadingStatus.Loaded,
     };
 
     expect(getSelectedTypes({ Filter: state })).toEqual([
-      'classic',
+      'lemon',
       'chocolate',
     ]);
   });
@@ -88,7 +88,7 @@ describe('Filter selectors', () => {
 
   it('returns empty types when current category is not selected', () => {
     const filters = [
-      makeFakeCategoryWithTypes('cheesecake', ['classic', 'chocolate']),
+      makeFakeCategoryWithTypes('cheesecake', ['lemon', 'chocolate']),
     ];
 
     const state: TFilterState = {
@@ -103,8 +103,8 @@ describe('Filter selectors', () => {
 
   it('returns types of the current category', () => {
     const filters = [
-      makeFakeCategoryWithTypes('cheesecake', ['classic', 'chocolate']),
-      makeFakeCategoryWithTypes('bisque', ['lemon']),
+      makeFakeCategoryWithTypes('cheesecake', ['lemon', 'chocolate']),
+      makeFakeCategoryWithTypes('bisque', ['vanilla']),
     ];
 
     const state: TFilterState = {
@@ -115,14 +115,14 @@ describe('Filter selectors', () => {
     };
 
     expect(getTypesByCurrentCategory({ Filter: state })).toEqual([
-      'classic',
+      'lemon',
       'chocolate',
     ]);
   });
 
   it('returns empty types when current category is not found in filters', () => {
     const filters = [
-      makeFakeCategoryWithTypes('cheesecake', ['classic', 'chocolate']),
+      makeFakeCategoryWithTypes('cheesecake', ['lemon', 'chocolate']),
     ];
 
     const state: TFilterState = {

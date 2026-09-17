@@ -37,7 +37,9 @@ function createMockStore(
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: {
-          extraArgument: axiosInstance,
+          extraArgument: {
+            api: axiosInstance,
+          },
         },
       }),
   });

@@ -1,3 +1,4 @@
+import type { ProductTypeLabel } from '../const/business';
 import type { TUser } from './user';
 
 export type TProductCategory =
@@ -6,7 +7,9 @@ export type TProductCategory =
   | 'shortbread'
   | 'dessert';
 
-export type TProductType = string;
+export type TProductType = keyof typeof ProductTypeLabel;
+
+export type TProductLabel = typeof ProductTypeLabel[keyof typeof ProductTypeLabel];
 
 export type TCategoryWithTypes = {
   category: TProductCategory;
